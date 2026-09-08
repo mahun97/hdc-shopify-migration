@@ -251,3 +251,8 @@ Designentscheidung, keine Panne.
 ## Wenn etwas hakt
 
 `references/fallen.md` lesen.
+
+## Danach
+
+Der Aufbau ist damit fertig, der Shop aber noch nicht übergabefähig. Es folgen
+`shopify-ux`, `shopify-cro` und `shopify-recht`, dann `shopify-uebergabe`.

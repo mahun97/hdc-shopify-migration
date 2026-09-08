@@ -18,6 +18,14 @@ Im Terminal `claude` starten und nacheinander eingeben:
 /plugin install shopify-migration@hdc-digital
 ```
 
+```
+/plugin install shopify-design@hdc-digital
+```
+
+```
+/plugin install shopify-abnahme@hdc-digital
+```
+
 Danach in Claude Code neu starten oder `/reload-plugins` ausführen.
 
 Das war's. Das Plugin steht ab jetzt in **jedem** Projektordner zur Verfügung.
@@ -37,9 +45,18 @@ was ansteht:
 Claude führt dich durch alle Phasen. Du musst keine Dateien öffnen und keine
 Befehle tippen.
 
-**Reihenfolge:** erst die Grundeinrichtung, dann die Produkte. Stehen Metafelder,
-Versandzonen und Pflichtangaben vorher, muss man sie nicht bei hunderten Produkten
-nachziehen.
+**Reihenfolge:**
+
+```
+shopify-settings → shopify-migration → shopify-design
+   → shopify-ux → shopify-cro → shopify-recht → shopify-uebergabe
+```
+
+Erst die Grundeinrichtung, dann die Produkte. Stehen Metafelder, Versandzonen und
+Pflichtangaben vorher, muss man sie nicht bei hunderten Produkten nachziehen.
+
+Die drei Prüfungen laufen erst, wenn der Shop steht. Ein halbfertiger Shop erzeugt
+Befunde, die sich beim Weiterbauen von selbst erledigen.
 
 ## Updates
 
@@ -58,10 +75,12 @@ export CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1
 
 ## Enthaltene Plugins
 
-| Plugin | Zweck |
-|---|---|
-| `shopify-settings` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
-| `shopify-migration` | Produktmigration — sieben Phasen, fünf Freigaben |
+| Plugin | Skills | Zweck |
+|---|---|---|
+| `shopify-settings` | `shopify-settings` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
+| `shopify-migration` | `shopify-migration` | Produktmigration — sieben Phasen, fünf Freigaben |
+| `shopify-design` | `shopify-design` | Konzept im Theme umsetzen — Copy, Gestaltung, Sections, Theme-Einstellungen |
+| `shopify-abnahme` | `shopify-ux`, `shopify-cro`, `shopify-recht`, `shopify-uebergabe` | Prüfung des fertigen Shops und Übergabe-Checkliste |
 
 ## Für Entwickler: Änderungen einspielen
 

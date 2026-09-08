@@ -19,6 +19,11 @@
       "name": "shopify-design",
       "source": "./plugins/shopify-design",
       "description": "Setzt ein Shop-Konzept im Theme um — erst die Shop-Copy als freigebbares Zwischenasset, dann Farbschema, Sections und Templates."
+    },
+    {
+      "name": "shopify-abnahme",
+      "source": "./plugins/shopify-abnahme",
+      "description": "Prüft den fertigen Shop aus drei Blickwinkeln — UX, CRO, Recht —, setzt um was maschinell geht und erstellt die Übergabe-Checkliste für den Livegang."
     }
   ]
 }

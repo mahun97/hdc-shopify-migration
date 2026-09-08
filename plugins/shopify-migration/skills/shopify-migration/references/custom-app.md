@@ -46,9 +46,16 @@ read_themes,write_themes,write_theme_code,
 read_translations,write_translations,
 read_online_store_navigation,write_online_store_navigation,
 read_content,write_content,
-read_locales,read_markets,
+read_legal_policies,write_legal_policies,
+read_shipping,write_shipping,
+read_locales,write_locales,
+read_markets,write_markets,
+read_locations,write_locations,
 read_product_listings
 ```
+
+Diese Liste deckt **beide** Skills ab — Grundeinrichtung und Produktmigration. Einmal
+vollständig setzen erspart mehrfaches Neuinstallieren der App.
 
 Warum vollständig: Bilder brauchen `files`, das Veröffentlichen `publications`,
 Pflichtangaben und Tabs sitzen im Theme, Untermenüs in der Navigation. Wer kürzt, merkt es

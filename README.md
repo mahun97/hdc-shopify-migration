@@ -11,6 +11,10 @@ Im Terminal `claude` starten und nacheinander eingeben:
 ```
 
 ```
+/plugin install shopify-shop-setup@hdc-digital
+```
+
+```
 /plugin install shopify-migration@hdc-digital
 ```
 
@@ -23,14 +27,19 @@ Das war's. Das Plugin steht ab jetzt in **jedem** Projektordner zur Verfügung.
 
 ## Benutzen
 
-Terminal im Kundenordner öffnen, `claude` starten und schreiben:
+Terminal im Kundenordner öffnen, `claude` starten und schreiben — je nachdem,
+was ansteht:
+
+> Ich möchte einen Shopify-Shop einrichten.
 
 > Ich möchte Produkte in einen Shopify-Shop migrieren.
 
-Claude führt dich durch alle sieben Phasen. Du musst keine Dateien öffnen
-und keine Befehle tippen.
+Claude führt dich durch alle Phasen. Du musst keine Dateien öffnen und keine
+Befehle tippen.
 
-Alternativ direkt aufrufen: `/shopify-migration:shopify-migration`
+**Reihenfolge:** erst die Grundeinrichtung, dann die Produkte. Stehen Metafelder,
+Versandzonen und Pflichtangaben vorher, muss man sie nicht bei hunderten Produkten
+nachziehen.
 
 ## Updates
 
@@ -51,7 +60,8 @@ export CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1
 
 | Plugin | Zweck |
 |---|---|
-| `shopify-migration` | Produktmigration in einen Shopify-Shop — sieben Phasen, fünf Freigaben |
+| `shopify-shop-setup` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
+| `shopify-migration` | Produktmigration — sieben Phasen, fünf Freigaben |
 
 ## Für Entwickler: Änderungen einspielen
 

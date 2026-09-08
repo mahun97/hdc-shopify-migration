@@ -6,6 +6,11 @@
   },
   "plugins": [
     {
+      "name": "shopify-shop-setup",
+      "source": "./plugins/shopify-shop-setup",
+      "description": "Grundeinrichtung eines Shopify-Shops — prüft, was fehlt, setzt automatisierbare Einstellungen und führt durch den Rest. Gehört vor die Produktmigration."
+    },
+    {
       "name": "shopify-migration",
       "source": "./plugins/shopify-migration",
       "description": "Führt eine Shopify-Produktmigration in sieben Phasen mit fünf Freigabepunkten durch — Zugang, Shop-Analyse, Importvorlage, Prüfung, Import, Abnahme."

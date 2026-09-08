@@ -1,0 +1,14 @@
+{
+  "name": "hdc-digital",
+  "owner": {
+    "name": "HDC Digital",
+    "url": "https://hdc-digital.com"
+  },
+  "plugins": [
+    {
+      "name": "shopify-migration",
+      "source": "./plugins/shopify-migration",
+      "description": "Führt eine Shopify-Produktmigration in sieben Phasen mit fünf Freigabepunkten durch — Zugang, Shop-Analyse, Importvorlage, Prüfung, Import, Abnahme."
+    }
+  ]
+}

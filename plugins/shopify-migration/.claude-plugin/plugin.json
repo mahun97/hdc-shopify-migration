@@ -1,0 +1,8 @@
+{
+  "name": "shopify-migration",
+  "description": "Produktmigration in einen Shopify-Shop: sieben Phasen, fünf Freigaben, Human in the loop. Analysiert den Zielshop, erzeugt eine geprüfte Importvorlage, importiert und nimmt ab.",
+  "author": {
+    "name": "HDC Digital"
+  },
+  "homepage": "https://hdc-digital.com"
+}

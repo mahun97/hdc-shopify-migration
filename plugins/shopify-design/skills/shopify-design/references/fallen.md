@@ -53,3 +53,9 @@ Die Vorlagen stammen aus den `presets` der Section-Schemas.
 noch nichts. Erst prüfen, ob Dateien da sind, dann schreiben.
 
 **`themeDuplicate` gibt `newTheme` zurück**, nicht `theme`.
+
+**Mobilprüfung braucht echte Geräteemulation.** Das Browserfenster zu verkleinern genügt
+nicht: `outerWidth` schrumpft, `innerWidth` bleibt breit — der Screenshot zeigt weiterhin
+die Desktop-Ansicht. Wer das übersieht, meldet eine Mobilprüfung, die nie stattgefunden hat.
+Prüfbar ohne Emulation ist nur, **ob** die Mobil-Einstellungen einer Section gesetzt sind;
+wie sie aussehen, nicht.

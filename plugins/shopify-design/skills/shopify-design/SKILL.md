@@ -131,22 +131,51 @@ Konzept steht. Das ist der Moment, das zu klären, nicht mitten im Aufbau.
 
 ### Phase 5 — Aufbau
 
-In der Reihenfolge, die sich bewährt hat:
+Zuerst ein **Duplikat** des Themes anlegen — nie am aktiven arbeiten. Das Duplikat entsteht
+asynchron; erst prüfen, ob die Dateien da sind, dann schreiben.
 
-1. Farbschema und Typografie in den Theme-Einstellungen
-2. Header und Navigation
-3. Footer
-4. Startseite
-5. Kategorieseiten-Template
-6. Produktseiten-Template
-7. zentrale Unterseiten
+Dann je Seite bauen, auf Basis der Zuordnung für das konkrete Theme:
 
-Nach jedem Schritt in der Storefront prüfen und den Befund vorlegen.
+```
+python3 <pfad>/scripts/5_aufbau.py --seite Startseite --template index \
+  --theme <duplikat-id> --zuordnung <pfad>/references/zuordnung-<theme>.json --trocken
+```
 
-### Phase 6 — Darstellung prüfen
+Ohne `--trocken` schreibt es — nach getipptem JA und nur auf unveröffentlichte Themes.
 
-Desktop und Mobil getrennt durchgehen, Warenkorb testen. Auffälligkeiten dokumentieren,
-statt sie stillschweigend zu beheben — manche sind Designentscheidungen.
+**Für Horizon liegt eine Zuordnung bei.** Für andere Themes eine eigene anlegen: Die
+Vorlagen stammen aus den `presets` der Section-Schemas, die Phase 4 ausgelesen hat.
+
+Reihenfolge, die sich bewährt hat: Farbschema → Header → Footer → Startseite →
+Kategorie-Template → Produkt-Template → Unterseiten.
+
+Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
+
+### Phase 6 — Prüfen
+
+```
+python3 <pfad>/scripts/6_pruefung.py --theme <duplikat-id>
+```
+
+Findet, was aus den Dateien ablesbar ist: offene `[RÜCKFRAGE …]`-Marker, Platzhaltertexte,
+Sections ohne zugewiesene Kollektion, nicht gesetzte Bilder, unangepasste Standardlinks,
+fehlende Mobil-Einstellungen, zu lange Überschriften, und ob die Copy freigegeben ist.
+Endet mit Fehlercode, solange Blocker offen sind.
+
+**Danach im Browser prüfen**, was kein Skript sehen kann:
+
+- Startseite, Kategorie- und Produktseite durchgehen
+- Warenkorb öffnen und einen Artikel hineinlegen
+- beide Sprachen, wenn der Shop mehrsprachig ist
+
+**Zur Mobilprüfung:** Das Browserfenster zu verkleinern reicht **nicht** — der
+Rendering-Viewport bleibt breit, und du prüfst gegen die Desktop-Ansicht, ohne es zu
+merken. Es braucht echte Geräteemulation. Steht die nicht zur Verfügung, sag es offen und
+bitte die Person, es in den Chrome-Entwicklerwerkzeugen anzusehen — statt eine Prüfung zu
+behaupten, die nicht stattgefunden hat.
+
+Auffälligkeiten **dokumentieren, nicht stillschweigend beheben** — manches ist eine
+Designentscheidung, keine Panne.
 
 > **Freigabe 2** — Aufbau abgenommen.
 

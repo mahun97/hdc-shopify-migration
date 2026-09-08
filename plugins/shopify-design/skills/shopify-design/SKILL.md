@@ -164,7 +164,37 @@ aussieht. Fehlen Fotos, sag es — und setze so lange ein Markenmotiv als Platzh
 
 Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
 
-### Phase 6 — Prüfen
+### Phase 6 — Theme-Einstellungen
+
+Farben und Schriften sind nur die Hälfte. Ein Theme hat ein paar Dutzend Schalter, die
+niemand sieht, bis sie falsch stehen — Quick-View, das zweite Bild beim Mouseover, der
+Warenkorb als Einschub, die Express-Checkout-Buttons, der Bestellhinweis, Logo, Favicon.
+Das ist Schritt 2 der HDC-Checkliste.
+
+```
+python3 <pfad>/scripts/9_checkliste.py --theme <duplikat-id>
+python3 <pfad>/scripts/9_checkliste.py --theme <duplikat-id> \
+    --logo logo.png --favicon favicon.png --setzen
+```
+
+Das Skript liest erst das `settings_schema` des Themes und arbeitet nur mit Schaltern, die
+es dort wirklich gibt. Jeder Punkt kennt mehrere mögliche Namen, weil jedes Theme sie
+anders nennt. Findet es keinen, meldet es den Punkt als offen — es schreibt nichts ins
+`settings_data`, was das Theme ignorieren würde.
+
+**Logo und Favicon kommen vom Kunden.** Kein Logo im Ordner heißt: nachfragen, nicht
+selbst bauen. Ein aus einem Produktfoto herausgeschnittener Schriftzug ist kein Logo.
+
+Zwei Punkte kann das Skript nur melden, weil sie in Templates statt in den Einstellungen
+stecken: der Express-Checkout-Block auf der Produktseite und die Social-Media-Links im
+Footer. Beides im Theme-Editor.
+
+Was in **Schritt 1** der Checkliste steht — Shop-Details, Währungsformat, Versand, Steuern,
+Standorte, Märkte, Sprachen, Checkout-Branding, Benachrichtigungen — gehört nicht hierher,
+sondern in den Skill `shopify-settings`. Und **Schritt 3**, die Apps, installiert immer ein
+Mensch.
+
+### Phase 7 — Prüfen
 
 ```
 python3 <pfad>/scripts/6_pruefung.py --theme <duplikat-id>

@@ -1,0 +1,29 @@
+{
+  "_hinweis": "Jeder Punkt nennt mehrere moegliche Setting-Namen, weil jedes Theme sie anders nennt. Das Skript nimmt den ersten, den es im settings_schema des Themes wirklich findet, und laesst den Punkt sonst offen — es erfindet keine Einstellung.",
+  "punkte": [
+    {"name": "Favicon",                "soll": "__bild__", "warum": "Ohne Favicon steht im Browser-Tab das graue Standardsymbol.",
+     "kandidaten": ["favicon", "favicon_image"]},
+    {"name": "Logo",                   "soll": "__bild__", "warum": "Ohne Logo zeigt der Header den Shop-Namen als Text.",
+     "kandidaten": ["logo", "logo_image", "header_logo", "brand_logo"]},
+    {"name": "Warenkorb als Einschub", "soll": "drawer",   "warum": "Der Einschub haelt die Person auf der Seite, die Warenkorbseite reisst sie heraus.",
+     "kandidaten": ["cart_type", "cart_drawer_type", "cart_behaviour"]},
+    {"name": "Quick-View aus",         "soll": false,      "warum": "Quick-View ueberspringt die Produktseite — und damit alles, was verkauft.",
+     "kandidaten": ["quick_add", "enable_quick_add", "quick_view", "enable_quick_view", "show_quick_view", "quick_buy"]},
+    {"name": "Quick-View aus (mobil)", "soll": false,      "warum": "Wie oben, getrennt einstellbar.",
+     "kandidaten": ["mobile_quick_add", "quick_add_mobile"]},
+    {"name": "Zweites Bild bei Mouseover", "soll": true,   "warum": "Das zweite Bild beim Ueberfahren erhoeht die Klickrate in der Kategorie.",
+     "kandidaten": ["show_second_image_on_hover", "show_secondary_image", "product_hover_image", "enable_image_hover", "hover_image"]},
+    {"name": "Bestellhinweis im Warenkorb", "soll": true,  "warum": "Kund:innen wollen Lieferhinweise mitgeben, sonst kommt es per Mail.",
+     "kandidaten": ["show_cart_note", "cart_notes", "enable_cart_note", "show_order_note"]},
+    {"name": "Express-Checkout-Buttons aus", "soll": false, "warum": "Shop Pay und PayPal springen am Warenkorb vorbei — Versandkosten und Rabatte sieht dann niemand.",
+     "kandidaten": ["show_accelerated_checkout_buttons", "show_dynamic_checkout", "enable_dynamic_checkout"]},
+    {"name": "Breadcrumbs aus",        "soll": false,      "warum": "Interne Konvention. Viele Themes haben die Einstellung gar nicht.",
+     "kandidaten": ["show_breadcrumbs", "breadcrumbs", "enable_breadcrumbs", "show_breadcrumb"]}
+  ],
+  "nur_pruefen": [
+    {"name": "Express-Checkout auf der Produktseite", "block": "accelerated-checkout", "template": "product",
+     "erwartet": "nicht vorhanden", "warum": "Derselbe Grund wie im Warenkorb — der Block gehoert aus templates/product.json raus."},
+    {"name": "Social-Media-Links", "block": "social-links", "template": "__gruppen__",
+     "erwartet": "vorhanden", "warum": "Steckt in Themes fast immer als Footer-Block, nicht in den Theme-Einstellungen."}
+  ]
+}

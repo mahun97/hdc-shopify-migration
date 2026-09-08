@@ -59,3 +59,21 @@ nicht: `outerWidth` schrumpft, `innerWidth` bleibt breit — der Screenshot zeig
 die Desktop-Ansicht. Wer das übersieht, meldet eine Mobilprüfung, die nie stattgefunden hat.
 Prüfbar ohne Emulation ist nur, **ob** die Mobil-Einstellungen einer Section gesetzt sind;
 wie sie aussehen, nicht.
+
+## Direkt nach dem Schreiben gelesen — und die alten Werte gesehen
+
+Die Asset-API liefert kurz nach einem `PUT` noch die vorherige Fassung. Wer sofort erneut
+prüft, sieht seine eigene Änderung nicht und schreibt sie ein zweites Mal.
+
+Es ist nichts kaputt. Ein paar Sekunden warten und nochmal lesen. Erst wenn der Wert dann
+immer noch alt ist, ist wirklich etwas schiefgegangen.
+
+## Ein Schalter, den es im Theme gar nicht gibt
+
+`settings_data.json` nimmt jeden Schlüssel an. Steht er nicht im `settings_schema` des
+Themes, wird er beim Rendern schlicht ignoriert — kein Fehler, keine Meldung, nur keine
+Wirkung. Deshalb prüft `9_checkliste.py` erst das Schema und meldet Punkte lieber als
+offen, statt ins Leere zu schreiben.
+
+Umgekehrt heißt `null` bei einem Schalter nicht "aus", sondern "nie angefasst" — dann gilt
+der Standard aus dem Schema. Der kann `true` sein.

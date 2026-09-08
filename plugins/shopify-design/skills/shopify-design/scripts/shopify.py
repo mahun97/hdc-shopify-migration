@@ -69,3 +69,33 @@ def gate(frage):
     print(f'  {frage}')
     if input('  Tippe JA zum Fortfahren: ').strip().upper() != 'JA':
         print('  Abgebrochen. Es wurde nichts geändert.'); sys.exit(0)
+
+def bild_hochladen(env, pfad, alt):
+    """Laedt eine Bilddatei in die Shop-Dateien und gibt den CDN-Dateinamen zurueck.
+    Damit laesst sie sich als shopify://shop_images/<name> in Theme-Settings setzen."""
+    import os, time, subprocess
+    name = os.path.basename(pfad)
+    typ = 'image/png' if name.lower().endswith('.png') else 'image/jpeg'
+    S = ("mutation($input:[StagedUploadInput!]!){ stagedUploadsCreate(input:$input){"
+         " stagedTargets{url resourceUrl parameters{name value}} userErrors{message} } }")
+    d = gql(env, S, {'input': [{'filename': name, 'mimeType': typ,
+                                'resource': 'FILE', 'httpMethod': 'POST'}]})['stagedUploadsCreate']
+    pruefe_fehler(d, 'stagedUploadsCreate')
+    z = d['stagedTargets'][0]
+    cmd = ['curl', '-sS', '-X', 'POST', z['url']]
+    for p in z['parameters']: cmd += ['-F', f'{p["name"]}={p["value"]}']
+    cmd += ['-F', f'file=@{pfad}']
+    subprocess.run(cmd, capture_output=True, timeout=300)
+    F = ("mutation($files:[FileCreateInput!]!){ fileCreate(files:$files){"
+         " files{id} userErrors{message} } }")
+    r = gql(env, F, {'files': [{'originalSource': z['resourceUrl'],
+                                'contentType': 'IMAGE', 'alt': alt}]})['fileCreate']
+    pruefe_fehler(r, 'fileCreate')
+    fid = r['files'][0]['id']
+    for _ in range(20):
+        q = gql(env, 'query($id:ID!){ node(id:$id){ ... on MediaImage{ fileStatus image{url} } } }',
+                {'id': fid})['node']
+        if q and q.get('fileStatus') == 'READY' and q.get('image'): break
+        time.sleep(3)
+    if not (q and q.get('image')): fehler('Bild wurde nicht verarbeitet.')
+    return q['image']['url'].split('/')[-1].split('?')[0]

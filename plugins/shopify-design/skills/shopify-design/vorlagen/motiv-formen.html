@@ -1,0 +1,13 @@
+<!-- Bildmotiv aus den Markenfarben. BEWUSST OHNE TEXT — Text kommt aus der Section.
+     Platzhalter: {{akzent}} {{zweit}} {{grund}} {{breite}} {{hoehe}} -->
+<style>
+*{margin:0;box-sizing:border-box}
+body{width:{{breite}}px;height:{{hoehe}}px;overflow:hidden}
+.b{width:100%;height:100%;background:{{grund}};position:relative;overflow:hidden}
+.k1{position:absolute;right:-7%;top:-24%;width:60%;padding-top:60%;border-radius:50%;background:{{akzent}}}
+.k2{position:absolute;right:11%;bottom:-36%;width:41%;padding-top:41%;border-radius:50%;background:{{zweit}};opacity:.94}
+.k3{position:absolute;left:-9%;bottom:-22%;width:33%;padding-top:33%;border-radius:50%;
+    border:2.8% solid {{zweit}};opacity:.16}
+.v{position:absolute;inset:0;background:linear-gradient(100deg,{{grund}} 34%,{{grund}}8C 58%,{{grund}}00 76%)}
+</style>
+<div class="b"><div class="k1"></div><div class="k2"></div><div class="k3"></div><div class="v"></div></div>

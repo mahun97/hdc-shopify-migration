@@ -146,8 +146,21 @@ Ohne `--trocken` schreibt es — nach getipptem JA und nur auf unveröffentlicht
 **Für Horizon liegt eine Zuordnung bei.** Für andere Themes eine eigene anlegen: Die
 Vorlagen stammen aus den `presets` der Section-Schemas, die Phase 4 ausgelesen hat.
 
-Reihenfolge, die sich bewährt hat: Farbschema → Header → Footer → Startseite →
-Kategorie-Template → Produkt-Template → Unterseiten.
+**Gestaltung gehört dazu, nicht danach.** Ein Textgerüst in Theme-Standardoptik ist kein
+Design. Lies `references/gestaltung.md` und setze in dieser Reihenfolge:
+
+1. **Schriften und Farbpalette** — `scripts/7_gestaltung.py`, aus dem Farbschema des Konzepts
+2. **Bildmotive** — `scripts/8_bilder.py`, Banner und Kategoriebilder aus den Markenfarben
+3. **Sections aufbauen** — `scripts/5_aufbau.py`
+4. Header, Footer, dann die Templates: Startseite → Kategorie → Produkt → Unterseiten
+
+**Kein Text in Bildern.** Steht die Überschrift im Bild und in der Section, liest man sie
+doppelt — und sie ist weder responsiv noch übersetzbar noch durchsuchbar. Bilder liefern
+Fläche und Form, die Worte kommen aus der Section.
+
+**Fotos entstehen nicht am Rechner.** Produktaufnahmen, Menschen, Situationen kommen vom
+Kunden. Wer das mit Farbflächen ersetzt, baut einen Shop, der wie eine Präsentationsfolie
+aussieht. Fehlen Fotos, sag es — und setze so lange ein Markenmotiv als Platzhalter.
 
 Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
 

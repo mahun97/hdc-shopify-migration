@@ -1,6 +1,8 @@
 {
-  "name": "shopify-shop-setup",
+  "name": "shopify-settings",
   "description": "Grundeinrichtung eines Shopify-Shops: prüft, was fehlt, setzt automatisierbare Einstellungen und führt durch den Rest. Gehört vor die Produktmigration.",
-  "author": { "name": "HDC Digital" },
+  "author": {
+    "name": "HDC Digital"
+  },
   "homepage": "https://hdc-digital.com"
 }

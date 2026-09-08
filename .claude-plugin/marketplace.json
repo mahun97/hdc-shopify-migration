@@ -6,8 +6,8 @@
   },
   "plugins": [
     {
-      "name": "shopify-shop-setup",
-      "source": "./plugins/shopify-shop-setup",
+      "name": "shopify-settings",
+      "source": "./plugins/shopify-settings",
       "description": "Grundeinrichtung eines Shopify-Shops — prüft, was fehlt, setzt automatisierbare Einstellungen und führt durch den Rest. Gehört vor die Produktmigration."
     },
     {

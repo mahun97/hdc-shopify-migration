@@ -1,5 +1,5 @@
 ---
-name: shopify-shop-setup
+name: shopify-settings
 description: Grundeinrichtung eines Shopify-Shops — prüft, was fehlt, setzt automatisierbare Einstellungen und führt durch den Rest. Nutze diesen Skill bei "Shop einrichten", "Grundeinstellungen", "Shop aufsetzen", "Was fehlt noch im Shop", "Versandkosten anlegen", "Richtlinien hinterlegen" oder vor einem Livegang.
 ---
 
@@ -30,7 +30,7 @@ Sag immer, wo ihr steht.
 Die Skripte liegen in `scripts/` neben dieser Datei. Ermittle den Pfad einmal:
 
 ```bash
-find ~/.claude -type d -name shopify-shop-setup -path '*skills*' 2>/dev/null | head -1
+find ~/.claude -type d -name shopify-settings -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Zugang

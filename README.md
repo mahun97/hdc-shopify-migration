@@ -11,7 +11,7 @@ Im Terminal `claude` starten und nacheinander eingeben:
 ```
 
 ```
-/plugin install shopify-shop-setup@hdc-digital
+/plugin install shopify-settings@hdc-digital
 ```
 
 ```
@@ -60,7 +60,7 @@ export CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1
 
 | Plugin | Zweck |
 |---|---|
-| `shopify-shop-setup` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
+| `shopify-settings` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
 | `shopify-migration` | Produktmigration — sieben Phasen, fünf Freigaben |
 
 ## Für Entwickler: Änderungen einspielen

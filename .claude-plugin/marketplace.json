@@ -14,6 +14,11 @@
       "name": "shopify-migration",
       "source": "./plugins/shopify-migration",
       "description": "Führt eine Shopify-Produktmigration in sieben Phasen mit fünf Freigabepunkten durch — Zugang, Shop-Analyse, Importvorlage, Prüfung, Import, Abnahme."
+    },
+    {
+      "name": "shopify-design",
+      "source": "./plugins/shopify-design",
+      "description": "Setzt ein Shop-Konzept im Theme um — erst die Shop-Copy als freigebbares Zwischenasset, dann Farbschema, Sections und Templates."
     }
   ]
 }

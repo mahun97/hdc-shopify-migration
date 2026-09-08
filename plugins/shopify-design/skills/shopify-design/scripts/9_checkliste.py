@@ -98,6 +98,12 @@ n = sum(len(bloecke(json_asset(f'sections/{g}.json') or {}, 'social-links'))
 print(f'  {"ok" if n else "! "} Social-Media-Links                      '
       f'{"im Footer gesetzt" if n else "kein Social-Block gefunden — im Theme-Editor ergaenzen"}')
 
+fg = json_asset('sections/footer-group.json') or {}
+roh = json.dumps(fg, ensure_ascii=False).lower()
+hat = 'powered_by' in roh or 'powered by shopify' in roh
+print(f'  {"! " if hat else "ok"} "Powered by Shopify" im Footer          '
+      f'{"noch drin — im Theme-Editor abschalten" if hat else "entfernt"}')
+
 if not aenderungen:
     print('\n  Nichts zu setzen.\n'); sys.exit(0)
 if '--setzen' not in sys.argv:

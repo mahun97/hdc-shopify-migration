@@ -194,7 +194,33 @@ Standorte, Märkte, Sprachen, Checkout-Branding, Benachrichtigungen — gehört 
 sondern in den Skill `shopify-settings`. Und **Schritt 3**, die Apps, installiert immer ein
 Mensch.
 
-### Phase 7 — Prüfen
+### Phase 7 — Kategorie-, Produkt- und Serviceseiten
+
+Schritt 6 bis 8 der Checkliste. Drei Skripte, alle erst lesend, dann schreibend:
+
+```
+python3 <pfad>/scripts/10_kategorieseite.py --theme <id>
+python3 <pfad>/scripts/11_produktseite.py  --theme <id>
+python3 <pfad>/scripts/12_serviceseiten.py
+```
+
+**Kategorieseiten** — Standardsortierung (`--sortierung BEST_SELLING`, bei ständig
+wechselndem Sortiment `CREATED_DESC`), ausverkaufte Artikel ans Ende
+(`--ausverkauft-ans-ende`, geht nur bei manuell sortierten Kollektionen — sonst sortiert
+Shopify selbst und es braucht eine App), Filterleiste, Kategoriebanner, Bildformate.
+
+**Produktseite** — Verfügbarkeit, Versandhinweis am Button, Akkordeon, klebender
+Warenkorb-Button, Express-Checkout raus, „Bild mit Text" darunter. Was das Skript ergänzt,
+enthält `[RÜCKFRAGE …]` an jeder Stelle, an der eine Zusage an Käufer steht — Lieferzeit,
+Versandkosten, Rückgabe. **Die füllt niemand aus dem Bauch.** Phase 8 findet sie wieder.
+
+**Serviceseiten** — FAQ, Versand, Zahlungsarten, Über uns. Werden als Gerüst angelegt und
+bleiben **unveröffentlicht**, bis die Rückfragen beantwortet sind. Rechtstexte gehören
+nicht hierher, die laufen über `shopify-settings`.
+
+Bewertungen, Größentabellen und Bundles kommen aus Apps. Die installiert ein Mensch.
+
+### Phase 8 — Prüfen
 
 ```
 python3 <pfad>/scripts/6_pruefung.py --theme <duplikat-id>

@@ -109,9 +109,25 @@ Nach der Freigabe Status auf `freigegeben` setzen und neu rendern.
 
 ### Phase 4 — Theme inventarisieren
 
-Erst wenn das Theme im Shop liegt: auslesen, welche Sections es anbietet und wie ihre
-Einstellungen heißen. Ohne das würdest du raten. Prestige, Dawn und Enterprise haben
-völlig verschiedene Section-Namen.
+```
+python3 <pfad>/scripts/4_theme_inventar.py
+```
+
+Liest aus, was das Theme wirklich kann: Templates mit ihrem aktuellen Aufbau, alle
+verfügbaren Sections mit Anzahl ihrer Einstellungen und Blocktypen, dazu die
+Farbeinstellungen. Ergebnis: `theme_inventar.json`.
+
+**Ohne diesen Schritt würdest du raten.** Dieselbe Section heißt je Theme anders:
+
+| Konzept sagt | Horizon | Dawn | Prestige |
+|---|---|---|---|
+| Hero mit Bild | `hero` | `image-banner` | eigene Namen |
+| Bestseller-Reihe | `product-list` | `featured-collection` | eigene Namen |
+| Bild-Text | `media-with-content` | `image-with-text` | eigene Namen |
+
+**Dann die Zuordnung erstellen**: welche Konzept-Section wird welche Theme-Section.
+Leg sie der Person vor — dort fällt auf, wenn das Theme etwas nicht kann, das im
+Konzept steht. Das ist der Moment, das zu klären, nicht mitten im Aufbau.
 
 ### Phase 5 — Aufbau
 

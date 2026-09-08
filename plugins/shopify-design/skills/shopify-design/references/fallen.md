@@ -27,3 +27,13 @@ Details in der Referenz des `shopify-settings`-Plugins.
 **Textlänge bestimmt das Layout.** Deshalb Copy vor Aufbau. Eine Überschrift, die im
 Dokument gut aussieht, kann im Hero über drei Zeilen brechen — dann lieber den Text
 kürzen als die Section umbauen.
+
+**Farben liegen je Theme woanders.** Ältere Themes haben pro Zweck ein eigenes Hex-Feld.
+Horizon und andere neue Themes halten eine **Farbpalette** und verweisen aus den
+Einzelfeldern nur darauf (`{{ settings.color_palette.background }}`). Wer dort ein
+Einzelfeld überschreibt, zerreißt den Verweis — zum Umfärben die Palette ändern.
+Das Inventar-Skript weist darauf hin, wenn es solche Verweise findet.
+
+**Horizon ist blockbasiert.** Neben `sections/` gibt es `blocks/` mit eigenen Dateien
+(im Testshop 95 Stück). Der Aufbau läuft dort stärker über Blöcke innerhalb weniger
+Sections als über viele Sections. Vor dem Aufbau ins Inventar schauen.

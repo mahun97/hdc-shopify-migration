@@ -66,30 +66,46 @@ aber nicht unfehlbar. Zeig der Person die gefundenen Farben und den Seitenaufbau
 
 ### Phase 3 — Shop-Copy schreiben
 
+**Hier liegt der eigentliche Wert dieses Skills.** Du schreibst als Senior-Copywriter,
+nicht als Formularausfüller. Lies vorher `references/copywriting.md` — dort steht das
+Vorgehen im Detail.
+
+**3a — Zielgruppe schärfen.** Das Konzept liefert Segmente als Rohtext. Verdichte sie:
+Wer genau kauft, in welcher Situation, mit welchem Auslöser, mit welchen Bedenken, in
+welcher Sprache. Leg fest, für wen du primär schreibst — ein Text kann nicht alle gleich
+gut bedienen.
+
+**Diese Analyse legst du der Person im Chat vor, bevor du schreibst.** Sie erklärt, warum
+die Texte hinterher so klingen, wie sie klingen, und Missverständnisse sind hier billig.
+
+**3b — Botschaftshierarchie.** Ein Satz, der hängenbleiben muss, wenn jemand nach drei
+Sekunden wegscrollt. Der gehört in den Hero. Dann Platz zwei und drei.
+
+**3c — Gerüst anlegen.**
+
 ```
 python3 <pfad>/scripts/2_copy_geruest.py --marke "Name" --regeln regeln.txt
+```
+
+**3d — Schreiben.** Alle Felder in `copy.json` füllen, Section für Section. **Das Dokument
+wird vollständig gefüllt** — ein Dokument mit Lücken kann niemand freigeben. Was du
+fachlich nicht weißt, formulierst du als sichtbare Rückfrage im Feld, statt es leer zu
+lassen oder zu erfinden.
+
+Status je Abschnitt auf `entwurf` setzen.
+
+**3e — Ansicht rendern und freigeben lassen.**
+
+```
 python3 <pfad>/scripts/3_copy_ansicht.py
 ```
 
-Das erste Skript legt `copy.json` an — die Struktur mit allen Textfeldern, leer.
-**Die Texte schreibst du**, direkt in `copy.json`, auf Basis von Scope, Altshop,
-vorhandenen Produkttexten und dem, was die Person beisteuert.
-
-Beim Schreiben:
-- Tonalität aus dem Scope einhalten
-- bei regulierten Produkten konservativ formulieren
-- keine Superlative ohne Beleg
-- Überschriften kurz, Fließtext in Sätzen, die jemand laut vorlesen würde
-- Button-Texte sagen, was passiert („Produkt ansehen", nicht „Mehr")
-
-Setz den Status je Abschnitt auf `entwurf`, wenn du ihn geschrieben hast.
-
-Das zweite Skript rendert `Shop-Copy.html`. **Veröffentliche das als Artifact** und
-gib der Person den Link zur Freigabe beim Kunden.
+Veröffentliche `Shop-Copy.html` als Artifact und gib der Person den Link. Fasse im Chat
+zusammen: für wen geschrieben, welche Botschaft trägt, wo Rückfragen offen sind.
 
 > **Freigabe 1** — Shop-Copy vom Kunden abgenommen. Erst danach geht es ins Theme.
 
-Nach der Freigabe Status auf `freigegeben` setzen und die Ansicht neu rendern.
+Nach der Freigabe Status auf `freigegeben` setzen und neu rendern.
 
 ### Phase 4 — Theme inventarisieren
 

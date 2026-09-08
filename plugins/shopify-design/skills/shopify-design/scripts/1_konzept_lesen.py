@@ -33,6 +33,25 @@ for p in d:
     m = re.search(r'Empfehlung:\s*([A-Za-zÄÖÜäöü][\w\- ]{2,24})', p.get_text())
     if m: theme = m.group(1).strip(); break
 
+# ---------------------------------------------------------------- Markenprofil
+def abschnitt(*marker):
+    """Liefert den ROHTEXT einer Konzeptseite. Bewusst ohne Aufbereitung: Praesentationen
+    trennen Aufzaehlungen oft weder durch Satzzeichen noch durch Abstaende, jede Heuristik
+    zerschneidet also an der falschen Stelle. Die Deutung uebernimmt Claude im Skill."""
+    for p in d:
+        zeilen = [z.strip() for z in p.get_text().split('\n') if z.strip()]
+        if any(z in marker for z in zeilen):
+            return [z for z in zeilen if z not in marker and len(z) > 2]
+    return []
+
+profil = {
+  'zielgruppe':  abschnitt('Zielgruppe'),
+  'wettbewerb':  abschnitt('Konkurrenten', 'Wettbewerber'),
+  'kategorien':  abschnitt('Produkt-Kategorie-', 'Produkt-Kategorie-Aufteilung'),
+  'unterseiten': abschnitt('Unterseiten') if False else [],
+  'filter':      abschnitt('Filter'),
+}
+
 # ---------------------------------------------------------------- Seitenaufbau
 SEITEN = ('Startseite', 'Kategorieseite', 'Produktseite', 'Unterseiten', 'Warenkorb', 'Menü')
 aufbau = collections.defaultdict(list)
@@ -69,13 +88,19 @@ for typ, eintraege in aufbau.items():
                   'texte': bausteine(e['beschreibung'])} for e in eintraege]
 
 ergebnis = {'quelle': os.path.basename(pdf), 'seiten_im_konzept': d.page_count,
-            'farbschema': farben, 'theme_empfehlung': theme, 'seitenaufbau': plan}
+            'farbschema': farben, 'theme_empfehlung': theme,
+            'markenprofil': profil, 'seitenaufbau': plan}
 json.dump(ergebnis, open('konzept.json', 'w'), ensure_ascii=False, indent=1)
 
 titel(f'Konzept ausgewertet: {os.path.basename(pdf)}')
 print(f'  Seiten:            {d.page_count}')
 print(f'  Theme-Empfehlung:  {theme or "nicht gefunden"}')
 print(f'  Farbschema:        {", ".join(farben) or "nicht gefunden"}')
+if profil['zielgruppe']:
+    print(f'\n  Zielgruppe laut Konzept (Rohtext — bitte selbst verdichten):')
+    for zg in profil['zielgruppe']: print(f'    {zg[:92]}')
+if profil['wettbewerb']:
+    print(f'\n  Wettbewerber: {", ".join(profil["wettbewerb"])}')
 print(f'\n  Seitenaufbau:')
 gesamt = 0
 for typ, eintraege in plan.items():

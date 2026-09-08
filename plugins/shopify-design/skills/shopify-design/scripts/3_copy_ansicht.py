@@ -38,6 +38,10 @@ h1{{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.02em}}
 .meta b{{color:var(--ink2)}}
 .swatches{{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}}
 .sw{{width:30px;height:30px;border-radius:3px;border:1px solid var(--line)}}
+.zg{{background:var(--entwurf-bg);border-left:3px solid var(--entwurf);border-radius:3px;
+padding:14px 18px;margin:22px 0 0}}
+.zg h3{{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--entwurf);margin-bottom:7px}}
+.zg p{{margin:0;color:var(--ink2);font-size:14px}}
 .regeln{{background:var(--offen-bg);border:1px solid var(--offen);border-radius:3px;padding:14px 18px;margin:22px 0 30px}}
 .regeln h3{{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--offen);margin-bottom:8px}}
 .regeln ul{{margin:0;padding-left:18px;color:var(--ink2);font-size:14px}}
@@ -76,6 +80,10 @@ if c.get('farbschema'):
     z('<div class="swatches">' + ''.join(f'<div class="sw" style="background:{e(f)}" title="{e(f)}"></div>'
       for f in c['farbschema']) + '</div>')
 z('</header>')
+
+if c.get('zielgruppe_primaer'):
+    z('<div class="zg"><h3>Für wen diese Texte geschrieben sind</h3>'
+      f'<p>{e(c["zielgruppe_primaer"])}</p></div>')
 
 if c.get('harte_regeln'):
     z('<div class="regeln"><h3>Verbindliche Vorgaben für alle Texte</h3><ul>')

@@ -22,7 +22,38 @@ def arg(n, pflicht=False, standard=None):
 vorlage = arg('--vorlage', True); name = arg('--name', True)
 breite, hoehe = (arg('--groesse', False, '1600x900').lower().split('x') + ['900'])[:2]
 werte = {'akzent': arg('--akzent', False, '#111111'), 'zweit': arg('--zweit', False, '#444444'),
-         'grund': arg('--grund', False, '#FFFFFF'), 'breite': breite, 'hoehe': hoehe}
+         'grund': arg('--grund', False, '#FFFFFF'), 'breite': breite, 'hoehe': hoehe,
+         'buehne': arg('--buehne', False, '#EAF2F6'),
+         'stoerer_farbe': arg('--stoerer-farbe', False, '#D81F2A'),
+         'stoerer_oben': arg('--stoerer-oben', False, ''),
+         'stoerer_gross': arg('--stoerer-gross', False, ''),
+         'stoerer_unten': arg('--stoerer-unten', False, '')}
+
+# ---------- Produktfoto: freistellen und einbetten ----------
+foto = arg('--foto')
+if foto:
+    if not os.path.exists(foto): fehler(f'Foto nicht gefunden: {foto}')
+    hier_ = os.path.dirname(os.path.abspath(__file__))
+    binaer = os.path.join(hier_, 'freisteller')
+    quelle = os.path.join(hier_, 'freisteller.swift')
+    if not os.path.exists(binaer) and os.path.exists(quelle):
+        subprocess.run(['swiftc', '-O', quelle, '-o', binaer], capture_output=True, timeout=300)
+    frei = os.path.abspath(f'{name}-frei.png')
+    genutzt = foto
+    if os.path.exists(binaer) and '--kein-freistellen' not in sys.argv:
+        r = subprocess.run([binaer, foto, frei], capture_output=True, text=True, timeout=180)
+        if r.returncode == 0 and os.path.exists(frei):
+            genutzt = frei
+            print(f'  Freigestellt: {r.stdout.strip()}')
+        else:
+            print(f'  Freistellen nicht möglich ({r.stdout.strip() or "unbekannt"}) — Originalfoto wird genutzt.')
+    else:
+        print('  Ohne Freistellen — Foto wird unverändert eingesetzt.')
+    import base64
+    werte['foto'] = 'data:image/png;base64,' + base64.b64encode(open(genutzt,'rb').read()).decode()
+else:
+    werte['foto'] = ''
+
 
 CHROME = next((p for p in (
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -36,7 +67,10 @@ if not os.path.exists(pfad): fehler(f'Vorlage "{vorlage}" nicht gefunden in vorl
 html = open(pfad, encoding='utf-8').read()
 for k, v in werte.items(): html = html.replace('{{' + k + '}}', str(v))
 offen = re.findall(r'\{\{(\w+)\}\}', html)
-if offen: fehler(f'Vorlage hat unbelegte Platzhalter: {", ".join(sorted(set(offen)))}')
+if offen:
+    if 'foto' in offen and not arg('--foto'):
+        fehler('Diese Vorlage braucht ein Produktfoto:  --foto pfad/zum/bild.png')
+    fehler(f'Vorlage hat unbelegte Platzhalter: {", ".join(sorted(set(offen)))}')
 if re.search(r'<(h1|h2|h3|p)[ >]', html):
     print('  Hinweis: Die Vorlage enthält Textelemente. Text gehört in die Section, nicht ins Bild.')
 

@@ -44,9 +44,41 @@ python3 scripts/8_bilder.py --vorlage motiv-formen --akzent "#F6A429" \
 Die Vorlage ist HTML, gerendert über headless Chrome. Erst `--nur-erzeugen`, ansehen, dann
 ohne das Flag hochladen und einsetzen.
 
-**Was so nicht entsteht: Fotos.** Ein Pferd im Stall, ein Produkt in der Hand, eine Person
-bei der Anwendung — das kommt vom Kunden oder aus einem Shooting. Wer das mit Farbflächen
-ersetzen will, bekommt einen Shop, der aussieht wie eine Präsentationsfolie.
+### Drei Sorten Bild — und was davon hier machbar ist
+
+| | woher | machbar |
+|---|---|---|
+| **Fläche und Form** — Verläufe, Bühnen, geometrische Motive | HTML-Vorlage, hier gerendert | ja |
+| **Komposition** — Produktfoto freigestellt auf so einer Fläche, mit Schatten und Störer | Kundenfoto + Vorlage | ja |
+| **Foto** — Person bei der Anwendung, Produkt in der Hand, Situation | Shooting, Bildagentur, Kunde | nein |
+
+Ein Banner, das nur aus Farbflächen besteht, sieht aus wie eine Präsentationsfolie. Fast
+immer ist die mittlere Zeile die Antwort: Der Kunde hat Produktfotos, meist freigestellt
+oder auf weißem Grund. Die kommen auf die Fläche, nicht statt ihr.
+
+Freistellen macht `scripts/freisteller.swift` (macOS Vision, wird beim ersten Lauf
+automatisch kompiliert). `--foto` genügt:
+
+```
+python3 scripts/8_bilder.py --vorlage motiv-buehne --foto produkt.png \
+    --grund "#FCFEFF" --buehne "#D3E9F7" --akzent "#E8F4DE" \
+    --name hero --groesse 2600x1040 --nur-erzeugen
+```
+
+Vorlagen mit Produktplatz:
+
+- `motiv-buehne` — weicher Verlauf, Produkt rechts, linke Hälfte bleibt ruhig für den Text
+- `motiv-produkt` — Farbfeld, runde Bühne, Produkt rechts, roter Störer (`--stoerer-oben`,
+  `--stoerer-gross`, `--stoerer-unten`)
+
+Freistellen scheitert bei Motiven ohne klaren Vordergrund (Textur, Flatlay, mehrere
+gleichrangige Objekte). Das Skript sagt das und nimmt dann das Original — dann lieber ein
+anderes Foto wählen als das Ergebnis durchwinken.
+
+**Seitenverhältnis prüfen.** Das Bild liegt als `cover` hinter der Section. Ist es deutlich
+höher als der sichtbare Streifen, schneidet der Browser oben und unten ab — und zwar genau
+da, wo das Produkt steht. Bildverhältnis und `section_height` müssen zusammenpassen; sonst
+ist der Sprühkopf weg.
 
 ## Die wichtigste Regel: kein Text im Bild
 

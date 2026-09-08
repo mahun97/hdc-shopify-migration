@@ -37,3 +37,19 @@ Das Inventar-Skript weist darauf hin, wenn es solche Verweise findet.
 **Horizon ist blockbasiert.** Neben `sections/` gibt es `blocks/` mit eigenen Dateien
 (im Testshop 95 Stück). Der Aufbau läuft dort stärker über Blöcke innerhalb weniger
 Sections als über viele Sections. Vor dem Aufbau ins Inventar schauen.
+
+**Horizon: Texte liegen in Blöcken, nicht in Section-Settings.** Eine Überschrift ist ein
+`text`-Block mit `type_preset: h1`, ein Button ein `button`-Block. Wer `settings.heading`
+sucht, findet nichts.
+
+**Manche Sections erlauben keine freien Blöcke.** `media-with-content` hat im Schema
+`"blocks": null` und arbeitet mit **statischen, verschachtelten** Blöcken (`media`,
+`content`, darin `group` mit `heading` und `text`). Freie Blöcke quittiert Shopify mit
+*„Blocks are not allowed in this context"* und lehnt den Upload ab — immerhin, ohne das
+Template zu beschädigen. Deshalb bildet die Zuordnung ganze Vorlagen ab, keine Feldlisten.
+Die Vorlagen stammen aus den `presets` der Section-Schemas.
+
+**Theme-Duplikate entstehen asynchron.** Direkt nach `themeDuplicate` liefert die Asset-API
+noch nichts. Erst prüfen, ob Dateien da sind, dann schreiben.
+
+**`themeDuplicate` gibt `newTheme` zurück**, nicht `theme`.

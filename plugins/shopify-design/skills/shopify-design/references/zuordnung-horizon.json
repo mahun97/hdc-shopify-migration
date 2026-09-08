@@ -1,0 +1,65 @@
+{
+  "theme": "Horizon",
+  "hinweis": "Horizon traegt Texte in BLOECKEN, nicht in Section-Settings — teils verschachtelt und mit statischen Blöcken, in die keine freien Blöcke eingefügt werden dürfen. Deshalb je Section eine vollständige Vorlage mit Platzhaltern {{Feldname}}. Leere Platzhalter werden samt Block entfernt. Vorlagen stammen aus den presets der Section-Schemas — bei Theme-Updates gegenprüfen.",
+  "erkennung": [
+    {"enthaelt": ["hero", "bildbanner", "titel mit bild"], "section": "hero"},
+    {"enthaelt": ["bestseller", "weitere produkte", "kollektion", "produktauflistung"], "section": "product-list"},
+    {"enthaelt": ["kategorien", "kategorie-aufteilung"], "section": "collection-list"},
+    {"enthaelt": ["bild-text", "bild - text"], "section": "media-with-content"},
+    {"enthaelt": ["newsletter", "footer"], "section": null, "grund": "Footer liegt in einer eigenen Section-Group, nicht im Template"}
+  ],
+  "sections": {
+    "hero": {
+      "settings": {"section_height": "large", "toggle_overlay": true, "overlay_style": "gradient",
+                   "horizontal_alignment_flex_direction_column": "center", "gap": 16,
+                   "padding-block-start": 40, "padding-block-end": 40},
+      "blocks": {
+        "heading": {"type": "text", "settings": {"text": "{{Überschrift}}", "type_preset": "h1", "max_width": "narrow"}},
+        "sub":     {"type": "text", "settings": {"text": "{{Unterzeile}}", "max_width": "narrow", "padding-block-end": 32}},
+        "cta":     {"type": "button", "settings": {"label": "{{Button-Text}}", "link": "shopify://collections/all"}}
+      },
+      "block_order": ["heading", "sub", "cta"]
+    },
+    "product-list": {
+      "settings": {"layout_type": "grid", "max_products": 4, "columns": 4, "mobile_columns": "2",
+                   "section_width": "page-width"},
+      "blocks": {
+        "heading": {"type": "text", "settings": {"text": "{{Sektionsüberschrift}}", "type_preset": "h2"}},
+        "sub":     {"type": "text", "settings": {"text": "{{ggf. Unterzeile}}", "max_width": "narrow"}}
+      },
+      "block_order": ["heading", "sub"]
+    },
+    "collection-list": {
+      "settings": {"layout_type": "bento", "section_width": "page-width", "max_collections": 6},
+      "blocks": {
+        "heading": {"type": "text", "settings": {"text": "{{Sektionsüberschrift}}", "type_preset": "h2"}},
+        "sub":     {"type": "text", "settings": {"text": "{{ggf. Unterzeile}}", "max_width": "narrow"}}
+      },
+      "block_order": ["heading", "sub"]
+    },
+    "media-with-content": {
+      "settings": {"media_width": "medium", "media_height": "60svh", "section_width": "page-width"},
+      "blocks": {
+        "media": {"type": "_media-without-appearance", "static": true},
+        "content": {
+          "type": "_content-without-appearance", "static": true,
+          "settings": {"horizontal_alignment_flex_direction_column": "flex-start",
+                       "vertical_alignment_flex_direction_column": "space-between"},
+          "blocks": {
+            "group": {
+              "type": "group", "settings": {"height": "fit"},
+              "blocks": {
+                "heading": {"type": "text", "settings": {"text": "{{Überschrift}}", "type_preset": "h3"}},
+                "text":    {"type": "text", "settings": {"text": "{{Fließtext}}", "max_width": "narrow", "type_preset": "rte"}}
+              },
+              "block_order": ["heading", "text"]
+            },
+            "button": {"type": "button", "settings": {"label": "{{Button-Text}}", "link": "shopify://collections/all", "style_class": "button-unstyled"}}
+          },
+          "block_order": ["group", "button"]
+        }
+      },
+      "block_order": ["media", "content"]
+    }
+  }
+}

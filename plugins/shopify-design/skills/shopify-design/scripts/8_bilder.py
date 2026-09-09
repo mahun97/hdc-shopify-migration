@@ -40,7 +40,19 @@ if foto:
         subprocess.run(['swiftc', '-O', quelle, '-o', binaer], capture_output=True, timeout=300)
     frei = os.path.abspath(f'{name}-frei.png')
     genutzt = foto
-    if os.path.exists(binaer) and '--kein-freistellen' not in sys.argv:
+    # Schon freigestellt? Dann waere ein zweiter Durchlauf nur Schaden.
+    schon_frei = False
+    try:
+        from PIL import Image
+        with Image.open(foto) as im:
+            if im.mode in ('RGBA', 'LA'):
+                a = im.getchannel('A')
+                schon_frei = a.getextrema()[0] == 0
+    except Exception:
+        pass
+    if schon_frei:
+        print('  Bild hat bereits einen Alphakanal — Freisteller übersprungen.')
+    elif os.path.exists(binaer) and '--kein-freistellen' not in sys.argv:
         r = subprocess.run([binaer, foto, frei], capture_output=True, text=True, timeout=180)
         if r.returncode == 0 and os.path.exists(frei):
             genutzt = frei

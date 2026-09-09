@@ -27,7 +27,7 @@ getComputedStyle(document.querySelector('h1')).fontFamily
 (`{{ settings.color_palette.background }}`). Wer ein Einzelfeld überschreibt, zerreißt den
 Verweis — immer die Palette ändern.
 
-## Bilder — drei Wege, in dieser Reihenfolge
+## Bilder — fünf Sorten, drei davon machbar
 
 **1. Der Kunde liefert.** Der Regelfall bei Produktfotos. Hochladen, Alt-Text setzen, fertig.
 
@@ -49,8 +49,18 @@ ohne das Flag hochladen und einsetzen.
 | | woher | machbar |
 |---|---|---|
 | **Fläche und Form** — Verläufe, Bühnen, geometrische Motive | HTML-Vorlage, hier gerendert | ja |
+| **Stimmung und Element** — Hintergrundtextur, Blattwerk, Werkzeug, generisches Objekt | erzeugt, `8b_bild_erzeugen.py` | ja |
 | **Komposition** — Produktfoto freigestellt auf so einer Fläche, mit Schatten und Störer | Kundenfoto + Vorlage | ja |
-| **Foto** — Person bei der Anwendung, Produkt in der Hand, Situation | Shooting, Bildagentur, Kunde | nein |
+| **Das Produkt des Kunden** — die Ware selbst, in jeder Ansicht | Shooting, Kunde | **nie erzeugen** |
+| **Menschen, die es gibt** — Inhaberin, Team, Werkstatt | Shooting, Kunde | **nie erzeugen** |
+
+**Die vierte und fünfte Zeile sind keine Empfehlung, sondern eine Grenze.** Ein erzeugtes
+Produktbild zeigt ein Produkt, das es so nicht gibt — in einem Shop ist das irreführende
+Werbung, und zwar die Art, die auffällt, wenn die Ware ankommt. Ein erzeugtes Gesicht auf
+einer „Über uns"-Seite behauptet einen Menschen, den es nicht gibt.
+
+Dazwischen liegt viel: der Hintergrund, auf dem das echte Produktfoto steht, die Textur
+hinter einem Zitat, das Blatt neben der Zutatenliste. Dafür ist die Bilderzeugung da.
 
 Ein Banner, das nur aus Farbflächen besteht, sieht aus wie eine Präsentationsfolie. Fast
 immer ist die mittlere Zeile die Antwort: Der Kunde hat Produktfotos, meist freigestellt
@@ -64,6 +74,28 @@ python3 scripts/8_bilder.py --vorlage motiv-buehne --foto produkt.png \
     --grund "#FCFEFF" --buehne "#D3E9F7" --akzent "#E8F4DE" \
     --name hero --groesse 2600x1040 --nur-erzeugen
 ```
+
+### Erzeugte Motive
+
+```
+python3 scripts/8b_bild_erzeugen.py --schluessel-pruefen
+python3 scripts/8b_bild_erzeugen.py --format quer --qualitaet mittel --name hero-grund \
+    --prompt "…"
+python3 scripts/8b_bild_erzeugen.py --transparent --name element --prompt "…"
+```
+
+Schlüssel: `~/.config/openai.env`, siehe `schluessel.md`. Das Skript druckt die Anleitung
+selbst, wenn die Datei fehlt — es rechnet ab, also erst ein Bild ansehen, dann die Serie.
+
+**`--transparent` liefert freigestellt.** Für erzeugte Elemente entfällt damit der
+Freisteller-Umweg: Das PNG hat einen echten Alphakanal und geht direkt als `--foto` in
+`motiv-buehne` oder `motiv-produkt`.
+
+**Was in den Prompt gehört:** Bildausschnitt, Licht, Farbstimmung, Detailgrad — und
+ausdrücklich, was *nicht* drin sein soll. `kein Text, keine Logos, keine Personen` steht
+in fast jedem brauchbaren Prompt, weil das Modell sonst gern Buchstaben erfindet. Für
+Hero-Hintergründe zusätzlich: welche Bildhälfte ruhig bleiben muss, damit dort Text stehen
+kann.
 
 Vorlagen mit Produktplatz:
 

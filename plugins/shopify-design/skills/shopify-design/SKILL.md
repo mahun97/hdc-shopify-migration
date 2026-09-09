@@ -45,6 +45,25 @@ Skripte liegen in `scripts/` neben dieser Datei. Pfad einmal ermitteln:
 find -L ~/.claude -type d -name shopify-design -path '*skills*' 2>/dev/null | head -1
 ```
 
+### Phase 0 — Schlüssel
+
+Vor dem ersten Lauf einmal je Rechner. **Zeig der Person, wie sie den Schlüssel ablegt —
+nimm ihn nicht entgegen.** Ein Schlüssel im Chat gilt als kompromittiert.
+
+```
+python3 <pfad>/scripts/8b_bild_erzeugen.py --schluessel-pruefen
+```
+
+Fehlt die Datei, druckt das Skript die vollständige Anleitung. Gib sie im Chat wieder,
+statt auf `references/schluessel.md` zu verweisen — dort steht dasselbe für später zum
+Nachschlagen, aber niemand soll erst eine Datei öffnen müssen.
+
+Ergebnis: `ok  Schlüssel gültig, gpt-image-1 freigeschaltet.` Alles andere ist in
+`schluessel.md` in einer Tabelle aufgeschlüsselt: `401` heißt falsch kopiert, `403`/`404`
+heißt Organisation nicht verifiziert.
+
+Der Shopify-Token je Kunde läuft nach demselben Muster — Datei, nicht Chat.
+
 ### Phase 1 — Unterlagen sichten
 
 Frage nach Scope-Dokument und Konzeptpräsentation. Lies beide.
@@ -150,7 +169,10 @@ Vorlagen stammen aus den `presets` der Section-Schemas, die Phase 4 ausgelesen h
 Design. Lies `references/gestaltung.md` und setze in dieser Reihenfolge:
 
 1. **Schriften und Farbpalette** — `scripts/7_gestaltung.py`, aus dem Farbschema des Konzepts
-2. **Bildmotive** — `scripts/8_bilder.py`, Banner und Kategoriebilder aus den Markenfarben
+2. **Bildmotive** — `scripts/8_bilder.py` für Flächen und Kompositionen aus den
+   Markenfarben, `scripts/8b_bild_erzeugen.py` für erzeugte Stimmungen und freigestellte
+   Elemente. `--transparent` liefert einen echten Alphakanal und geht ohne Umweg als
+   `--foto` in die Vorlagen
 3. **Sections aufbauen** — `scripts/5_aufbau.py`
 4. Header, Footer, dann die Templates: Startseite → Kategorie → Produkt → Unterseiten
 
@@ -158,9 +180,15 @@ Design. Lies `references/gestaltung.md` und setze in dieser Reihenfolge:
 doppelt — und sie ist weder responsiv noch übersetzbar noch durchsuchbar. Bilder liefern
 Fläche und Form, die Worte kommen aus der Section.
 
-**Fotos entstehen nicht am Rechner.** Produktaufnahmen, Menschen, Situationen kommen vom
-Kunden. Wer das mit Farbflächen ersetzt, baut einen Shop, der wie eine Präsentationsfolie
-aussieht. Fehlen Fotos, sag es — und setze so lange ein Markenmotiv als Platzhalter.
+**Zwei Bildsorten werden nie erzeugt: das Produkt des Kunden und Menschen, die es
+wirklich gibt.** Ein erzeugtes Produktbild zeigt Ware, die es so nicht gibt — das ist
+irreführende Werbung, und zwar die Art, die auffällt, wenn das Paket ankommt. Ein
+erzeugtes Gesicht auf „Über uns" behauptet einen Menschen, den es nicht gibt. Beides
+kommt aus einem Shooting oder vom Kunden.
+
+Alles dazwischen — Hintergründe, Texturen, generische Elemente — ist erzeugbar und macht
+den Unterschied zwischen einem Shop und einer Präsentationsfolie. Fehlen echte Fotos, sag
+es, und setze so lange ein Markenmotiv.
 
 Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
 

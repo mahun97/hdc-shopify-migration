@@ -30,7 +30,7 @@ Sag immer, wo ihr steht.
 Die Skripte liegen in `scripts/` neben dieser Datei. Ermittle den Pfad einmal:
 
 ```bash
-find ~/.claude -type d -name shopify-settings -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-settings -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Zugang
@@ -97,3 +97,9 @@ erledigt, was bleibt offen, was liegt beim Kunden.
 ## Wenn etwas hakt
 
 `references/fallen.md` lesen.
+
+## Danach
+
+Der Rahmen steht, der Shop ist aber leer. Es folgen `shopify-migration` für die Produkte,
+`shopify-design` für den Aufbau und zum Schluss `shopify-abnahme` für die Prüfung und die
+Übergabe-Checkliste.

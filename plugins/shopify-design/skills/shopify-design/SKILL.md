@@ -42,7 +42,7 @@ Ergebnisse in Klartext. Immer sagen, wo ihr steht.
 Skripte liegen in `scripts/` neben dieser Datei. Pfad einmal ermitteln:
 
 ```bash
-find ~/.claude -type d -name shopify-design -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-design -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Unterlagen sichten

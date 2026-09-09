@@ -68,8 +68,10 @@ z.append(f'Stand {datetime.date.today().strftime("%d.%m.%Y")} · Shop `{shop["my
 z.append(f'Grundlage: {len(alle)} Befunde aus {len(dateien)} Pruefungen. '
          f'{len(erledigt)} umgesetzt, {len(offen)} offen, davon {len(blocker)} blockierend.\n')
 
+nummer = [0]
 def block(ueberschrift, einleitung, punkte):
-    z.append(f'\n## {ueberschrift}\n')
+    nummer[0] += 1
+    z.append(f'\n## {nummer[0]}. {ueberschrift}\n')
     z.append(einleitung + '\n')
     if not punkte: z.append('\nNichts offen.\n'); return
     for p in punkte:
@@ -77,28 +79,31 @@ def block(ueberschrift, einleitung, punkte):
         z.append(f'\n*{BEREICH.get(p["_bereich"], p["_bereich"])} · {p["wo"]}*\n')
         z.append(f'\n{p["empfehlung"]}\n')
 
-block('1. Blocker vor dem Livegang',
+block('Blocker vor dem Livegang',
       'Solange einer dieser Punkte offen ist, geht der Shop nicht live. '
       'Die rechtlichen darunter sind keine Empfehlung, sondern Voraussetzung.', blocker)
-block('2. Liegt beim Kunden',
+block('Liegt beim Kunden',
       'Angaben, Texte, Fotos und Entscheidungen, die niemand anders treffen kann. '
       'Geschaetzte Werte waeren an dieser Stelle eine Zusage an Kaeufer.', beim_kunden)
-block('3. Von Hand im Shop-Admin',
+block('Von Hand im Shop-Admin',
       'Technisch machbar, aber nicht ueber die Schnittstelle erreichbar.', von_hand)
 
-z.append('\n## 4. Immer vor dem Livegang\n')
+nummer[0] += 1
+z.append(f'\n## {nummer[0]}. Immer vor dem Livegang\n')
 z.append('\nUnabhaengig vom Befund — diese Punkte betreffen jeden Shop.\n\n')
 z.append('| Punkt | Zustaendig | Warum |\n|---|---|---|\n')
 for name, wer, warum in IMMER:
     z.append(f'| {name} | {"Kunde" if wer == "kunde" else "Agentur"} | {warum} |\n')
 
 if erledigt:
-    z.append('\n## 5. Erledigt\n\n')
+    nummer[0] += 1
+    z.append(f'\n## {nummer[0]}. Erledigt\n\n')
     for p in erledigt:
         z.append(f'- **{p["befund"]}** — {p.get("notiz") or "umgesetzt"}\n')
 
 if unklar:
-    z.append('\n## 6. Nicht pruefbar\n\n')
+    nummer[0] += 1
+    z.append(f'\n## {nummer[0]}. Nicht pruefbar\n\n')
     z.append('Diese Punkte konnten nicht geprueft werden. Sie sind damit **nicht** in Ordnung, '
              'sondern unbekannt.\n\n')
     for b, u in unklar: z.append(f'- {BEREICH.get(b, b)}: {u}\n')

@@ -39,7 +39,7 @@ Die Skripte liegen im Ordner `scripts/` neben dieser SKILL.md. Ermittle den abso
 Pfad einmal zu Beginn und merke ihn dir für die ganze Sitzung:
 
 ```bash
-find ~/.claude ~/.claude/plugins -type d -name shopify-migration -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-migration -path '*skills*' 2>/dev/null | head -1
 ```
 
 Rufe die Skripte danach mit diesem vollen Pfad auf. **Arbeitsverzeichnis ist immer der
@@ -146,3 +146,11 @@ liefern muss**. Zweiteres ist die eigentliche Übergabeliste.
 
 Bei Problemen zuerst `references/fallen.md` lesen — dort stehen die Fälle, die
 erfahrungsgemäß auftreten, mit Ursache und Abhilfe.
+
+## Davor und danach
+
+**Davor:** `shopify-settings`. Stehen Metafeld-Definitionen, Versandzonen und
+Pflichtangaben vor dem Import, muss man sie nicht bei hunderten Produkten nachziehen.
+
+**Danach:** `shopify-design` baut das Theme auf, `shopify-abnahme` prüft den fertigen Shop
+und schreibt die Übergabe-Checkliste.

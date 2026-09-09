@@ -26,3 +26,16 @@ Produkten und müssen nachgezogen werden. Deshalb: Grundeinrichtung vor Produktm
 
 **Kein Kanal veröffentlicht automatisch.** Steht `autoPublish` überall auf `false`, sind
 neu angelegte Produkte unsichtbar, bis sie explizit publiziert werden.
+
+## Die Skripte sind nicht auffindbar
+
+Sind die Skills lokal nach `~/.claude/skills/` verlinkt statt über den Marketplace
+installiert, liegt dort ein Symlink und kein Ordner. `find` folgt Symlinks im Standard
+nicht und liefert nichts zurück — es sieht aus, als wäre der Skill nicht installiert.
+
+Deshalb steht in allen Skills `find -L`. Wer den Pfad selbst sucht, muss das `-L`
+mitnehmen:
+
+```bash
+find -L ~/.claude -type d -name shopify-design -path '*skills*' 2>/dev/null | head -1
+```

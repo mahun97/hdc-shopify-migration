@@ -1,6 +1,14 @@
-# HDC Claude-Plugins
+# HDC Shopify-Kit
 
-Marketplace für Claude-Code-Plugins von HDC Digital.
+Claude-Code-Plugins für den kompletten Weg vom leeren Entwicklungsshop bis zur
+Übergabe an den Kunden. Vier Plugins, sieben Skills, ein durchgehender Ablauf.
+
+Alles läuft nach demselben Muster: **Der Ablauf ist fest, Claude macht den größten Teil,
+ein Mensch kontrolliert und gibt frei.** Schreibende Schritte verlangen ein getipptes
+`JA`. Was niemand wissen kann — Lieferzeiten, Preise, Herstelleradressen, Rechtstexte —
+wird nicht geraten, sondern als Rückfrage markiert.
+
+---
 
 ## Für Mitarbeiter: einmalig einrichten
 
@@ -26,37 +34,245 @@ Im Terminal `claude` starten und nacheinander eingeben:
 /plugin install shopify-abnahme@hdc-digital
 ```
 
-Danach in Claude Code neu starten oder `/reload-plugins` ausführen.
+Danach Claude Code neu starten oder `/reload-plugins` ausführen. Die Plugins stehen ab
+dann in **jedem** Projektordner zur Verfügung.
 
-Das war's. Das Plugin steht ab jetzt in **jedem** Projektordner zur Verfügung.
+> Voraussetzung: Zugriff auf das GitHub-Repo, einmalig `gh auth login`.
 
-> Voraussetzung: Du hast Zugriff auf das GitHub-Repo und bist eingeloggt —
-> einmalig mit `gh auth login`.
+### Zugang zum Shop
+
+Jeder Skill braucht einen Shop-Token. Der wird **nicht** von Claude erzeugt, sondern vom
+Menschen im Shop-Admin — der Weg steht in `shopify-migration/references/custom-app.md`.
+Der Token landet in einer Datei, nie im Chat:
+
+```
+~/.config/shopify-<kunde>.env
+```
+
+```
+SHOP=kunde-xxxx.myshopify.com
+TOKEN=shpat_...
+```
+
+Welche Berechtigungen nötig sind, steht in
+`shopify-settings/references/berechtigungen.md`. Sie decken alle Skills ab.
+
+---
 
 ## Benutzen
 
-Terminal im Kundenordner öffnen, `claude` starten und schreiben — je nachdem,
-was ansteht:
+Terminal im Kundenordner öffnen, `claude` starten, in normaler Sprache sagen, was ansteht:
 
 > Ich möchte einen Shopify-Shop einrichten.
 
 > Ich möchte Produkte in einen Shopify-Shop migrieren.
 
-Claude führt dich durch alle Phasen. Du musst keine Dateien öffnen und keine
-Befehle tippen.
+> Setz mir das Konzept im Theme um.
 
-**Reihenfolge:**
+> Mach eine Abnahme — kann der Shop live gehen?
+
+Claude wählt den passenden Skill und führt durch alle Phasen. Man muss keine Datei öffnen
+und keinen Befehl tippen.
+
+### Reihenfolge
 
 ```
-shopify-settings → shopify-migration → shopify-design
-   → shopify-ux → shopify-cro → shopify-recht → shopify-uebergabe
+shopify-settings  →  shopify-migration  →  shopify-design  →  shopify-abnahme
+   Rahmen              Produkte              Aufbau            Prüfung + Übergabe
 ```
 
-Erst die Grundeinrichtung, dann die Produkte. Stehen Metafelder, Versandzonen und
-Pflichtangaben vorher, muss man sie nicht bei hunderten Produkten nachziehen.
+Die Reihenfolge ist kein Vorschlag. Stehen Metafelder, Versandzonen und Pflichtangaben
+vor dem Import, muss man sie nicht bei hunderten Produkten nachziehen. Und eine Prüfung
+an einem halbfertigen Shop erzeugt Befunde, die sich beim Weiterbauen von selbst
+erledigen.
 
-Die drei Prüfungen laufen erst, wenn der Shop steht. Ein halbfertiger Shop erzeugt
-Befunde, die sich beim Weiterbauen von selbst erledigen.
+---
+
+## Die Skills im Einzelnen
+
+### `shopify-settings` — Grundeinrichtung
+
+Richtet den Rahmen ein: Stammdaten, Richtlinien, Versand, Sprachen, Märkte, Standorte,
+Steuern, Metafeld-Definitionen. Prüft zuerst, was fehlt, und trennt dabei drei Dinge —
+was blockiert, was geprüft gehört, und was mangels Berechtigung *unklar* blieb.
+
+| Skript | Was es tut |
+|---|---|
+| `1_bestandsaufnahme.py` | Prüft den gesamten Einrichtungsstand, schreibt `Einrichtungsstand.md` |
+| `2_richtlinien.py` | Spielt eine **gelieferte** Richtlinie ein — schreibt selbst keine |
+
+**Grenzen:** Keine Rechtstexte, keine geschätzten Versandkosten oder Steuersätze, nie
+Zahlungsanbieter (dort werden Bankdaten und Ausweise verlangt).
+
+Nachschlagen: `berechtigungen.md`, `browser-einstellungen.md` (der Shopify-Admin steckt in
+Shadow DOM — Werte müssen getippt, nicht zugewiesen werden), `fallen.md`.
+
+---
+
+### `shopify-migration` — Produktmigration
+
+Sieben Phasen, fünf Freigaben: Zugang, Shop-Analyse, Steckbrief, Importvorlage, Prüfung,
+Import, Abnahme.
+
+| Skript | Was es tut |
+|---|---|
+| `1_steckbrief.py` | Liest den Zielshop aus — Metafelder, Optionen, Tag-Struktur, Kollektionen |
+| `2_vorlage.py` | Erzeugt die Importvorlage passend zu diesem Shop |
+| `3_pruefen.py` | Prüft die gefüllte Vorlage vor dem Import — Pflichtfelder, Dubletten, Handles |
+| `4_import.py` | Importiert über `productSet`, mit Wiederaufnahme nach Abbruch |
+| `5_abnahme.py` | Vergleicht Soll und Ist nach dem Import |
+
+Nachschlagen: `custom-app.md` (zwei Wege zum Token — Shop-Admin gibt ihn direkt, das
+Partner Dashboard nur über OAuth), `chrome.md`, `fallen.md`.
+
+---
+
+### `shopify-design` — Konzept im Theme umsetzen
+
+Acht Phasen. Beginnt bewusst mit der **Copy als eigenem Zwischenasset**, das freigegeben
+wird, bevor irgendetwas ins Theme geht.
+
+| Skript | Was es tut |
+|---|---|
+| `1_konzept_lesen.py` | Liest Scope-Dokument und Konzeptpräsentation aus, inklusive Farbwerten |
+| `2_copy_geruest.py` | Baut das Copy-Gerüst aus der Konzeptstruktur |
+| `3_copy_ansicht.py` | Rendert die Copy als HTML zur Freigabe |
+| `4_theme_inventar.py` | Liest, welche Sections und Blöcke dieses Theme wirklich hat |
+| `5_aufbau.py` | Setzt die freigegebene Copy in die Sections ein |
+| `6_pruefung.py` | Findet offene `[RÜCKFRAGE …]`, Platzhalter, nicht gesetzte Bilder |
+| `7_gestaltung.py` | Schriften und Farbpalette |
+| `8_bilder.py` | Erzeugt Bildmotive aus HTML-Vorlagen, stellt Produktfotos frei, lädt hoch |
+| `9_checkliste.py` | Theme-Einstellungen nach HDC-Checkliste (Schritt 2) |
+| `10_kategorieseite.py` | Sortierung, ausverkaufte Artikel ans Ende, Filter, Banner, Bildformate (Schritt 6) |
+| `11_produktseite.py` | Verfügbarkeit, Versandhinweis, Akkordeon, Express-Checkout raus (Schritt 7) |
+| `12_serviceseiten.py` | FAQ, Versand, Zahlung, Über uns als Gerüst (Schritt 8) |
+
+**Bilder — drei Sorten, zwei davon machbar:**
+
+| | woher | machbar |
+|---|---|---|
+| Fläche und Form — Verläufe, Bühnen, geometrische Motive | HTML-Vorlage | ja |
+| Komposition — freigestelltes Produktfoto auf so einer Fläche | Kundenfoto + Vorlage | ja |
+| Foto — Person bei der Anwendung, Situation | Shooting, Bildagentur | nein |
+
+Freigestellt wird über die macOS-Vision-Bibliothek (`freisteller.swift`, kompiliert sich
+beim ersten Lauf selbst). Vorlagen mit Produktplatz: `motiv-buehne`, `motiv-produkt`.
+
+**Harte Regeln:** Kein Text im Bild — er wäre nicht responsiv, nicht übersetzbar, nicht
+durchsuchbar, nicht vorlesbar. Nie auf dem aktiven Theme arbeiten, immer auf einem
+Duplikat; die Skripte verweigern das MAIN-Theme.
+
+Nachschlagen: `copywriting.md`, `gestaltung.md`, `theme-checkliste.json`,
+`zuordnung-horizon.json`, `fallen.md`.
+
+---
+
+### `shopify-abnahme` — Prüfung und Übergabe
+
+Vier Skills in einem Plugin. `shopify-abnahme` führt die drei anderen nacheinander aus;
+sie funktionieren aber auch einzeln und schreiben in dieselben Befund-Dateien.
+
+```
+shopify-abnahme
+   ├── shopify-ux      Benutzerführung
+   ├── shopify-cro     Verkaufspsychologie
+   └── shopify-recht   Pflichtangaben
+```
+
+#### `shopify-ux`
+
+Prüft entlang von drei festgelegten Kaufwegen — „ich weiß was ich will", „ich weiß es
+noch nicht", „ich habe eine Frage". Das Skript misst WCAG-Kontraste, Startseitenlänge,
+Navigationsbreite, tote Menüpunkte, fehlende Alt-Texte, dünne Beschreibungen.
+
+Alles Weitere kommt aus dem Browserdurchgang. **Mobil wird nur behauptet, wenn es geprüft
+wurde** — das Fenster zu verkleinern reicht nicht, der Rendering-Viewport bleibt breit.
+
+Nachschlagen: `heuristiken.md` — zehn Fragen, an denen sich fast jeder Befund festmachen
+lässt, plus die Kontrastwerte, die nicht verhandelbar sind.
+
+#### `shopify-cro`
+
+Geht die fünf Einwände in fester Reihenfolge durch: Bin ich hier richtig → Ist das das
+Richtige → Kann ich denen glauben → Was kostet es wirklich → Was, wenn es nicht passt.
+Eine Frage, die erst im Checkout beantwortet wird, ist zu spät beantwortet.
+
+Das Skript zählt Bilder je Produkt, leere Kategorien, fehlende Bewertungen und
+Empfehlungen, Zahlungsicons, Newsletter, Versandversprechen, Warenkorb-Typ.
+
+Nachschlagen: `verkaufspsychologie.md` — trennt Hebel, die tragen (Sozialbeweis,
+Konkretheit, Verlustaversion), von denen, die kippen (erfundene Knappheit, Streichpreise
+ohne echten Vorpreis nach § 11 PAngV, generierte Bewertungen).
+
+#### `shopify-recht`
+
+Stellt fest, **ob** Pflichtangaben da sind — nicht, ob ihr Text trägt. Schreibt keine
+Rechtstexte, auch nicht als Entwurf, und gibt keine Rechtsauskunft.
+
+Geprüft werden: AGB, Widerruf, Datenschutz, Impressum; Mehrwertsteuer- und
+Versandkostenhinweis am Preis; Grundpreis nach PAngV; Metafelder für Herstellerangaben
+nach GPSR; Cookie-Einwilligung; Versandtarife; Rechtstexte in allen veröffentlichten
+Sprachen.
+
+**Fehlt eine Berechtigung, gilt der Punkt als ungeprüft — nicht als in Ordnung.**
+
+Nachschlagen: `pflichtangaben.md`.
+
+#### Der Abnahme-Skill selbst
+
+| Skript | Was es tut |
+|---|---|
+| `abnahme.py` | Startet alle drei Prüfungen nacheinander, fasst den Stand zusammen |
+| `abnahme.py --stand` | Nur zusammenrechnen, ohne neu zu prüfen |
+| `umsetzen.py` | Setzt um, wofür es einen echten Handgriff gibt |
+| `uebergabe.py` | Schreibt `Uebergabe.md` |
+
+Alle Befunde laufen in `befunde/*.json` zusammen, in einem gemeinsamen Format:
+
+```json
+{"bereich":"ux","punkte":[
+ {"id":"ux-kontrast-text","schwere":"blocker","wo":"Farbpalette",
+  "befund":"…","empfehlung":"…","umsetzung":"mensch","befehl":null}]}
+```
+
+Claude trägt dort auch ein, was es im Durchgang selbst gefunden hat.
+
+**Zwei Regeln, die den Wert des Dokuments ausmachen:**
+
+- Ein Befund gilt nur als erledigt, wenn er nachweislich umgesetzt wurde. Ein als `auto`
+  markierter Punkt ohne hinterlegten Handgriff wird gemeldet, nicht abgehakt.
+- Ungeprüft ist nicht in Ordnung. Fehlende Berechtigungen stehen als eigener Abschnitt in
+  der Übergabe.
+
+`Uebergabe.md` ist nach **Zuständigkeit** sortiert, nicht nach Thema:
+
+1. Blocker vor dem Livegang
+2. Liegt beim Kunden
+3. Von Hand im Shop-Admin
+4. Immer vor dem Livegang — Zahlung, Domain, Plan, Passwortschutz, Testbestellung,
+   E-Mail-Vorlagen, Weiterleitungen, Analytics
+5. Erledigt — mit dem, was tatsächlich gemacht wurde
+6. Nicht prüfbar
+
+---
+
+## Was Claude in diesem Kit nicht tut
+
+Diese Grenzen sind in den Skills festgeschrieben, nicht Auslegungssache:
+
+- **Keine Rechtstexte.** AGB, Widerruf, Datenschutz, Impressum kommen vom Kunden, seinem
+  Anwalt oder einem Dienst wie der IT-Recht Kanzlei. Auch kein Entwurf.
+- **Keine erfundenen Fakten.** Maße, Gewichte, Preise, Lieferzeiten, Herstelleradressen,
+  Zielgruppenzuordnungen. Recherchiertes wird mit Quelle vorgelegt und bestätigt.
+- **Keine Zahlungsanbieter, keine Domains, keine Tarifwahl.** Dort werden Bankdaten und
+  Ausweise verlangt.
+- **Kein Token, kein Client Secret im Chat**, in Mails, in Tickets oder auf Screenshots.
+  Claude liest die Datei selbst.
+- **Die App erstellt der Mensch.** Claude erzeugt keine Zugangsdaten.
+- **Nie auf dem aktiven Theme.** Immer Duplikat.
+- **Schreiben nur nach getipptem `JA`.**
+
+---
 
 ## Updates
 
@@ -66,50 +282,55 @@ Kommen automatisch. Manuell erzwingen:
 /plugin marketplace update hdc-digital
 ```
 
-Falls die automatische Aktualisierung bei diesem privaten Repo scheitert, einmalig
-in der Shell setzen:
+---
 
-```bash
-export CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1
-```
-
-## Enthaltene Plugins
-
-| Plugin | Skills | Zweck |
-|---|---|---|
-| `shopify-settings` | `shopify-settings` | Grundeinrichtung — prüft, was fehlt, und richtet ein, was automatisierbar ist |
-| `shopify-migration` | `shopify-migration` | Produktmigration — sieben Phasen, fünf Freigaben |
-| `shopify-design` | `shopify-design` | Konzept im Theme umsetzen — Copy, Gestaltung, Sections, Theme-Einstellungen |
-| `shopify-abnahme` | `shopify-ux`, `shopify-cro`, `shopify-recht`, `shopify-uebergabe` | Prüfung des fertigen Shops und Übergabe-Checkliste |
-
-## Für Entwickler: Änderungen einspielen
+## Für Entwickler
 
 Lokal testen, ohne zu installieren:
 
 ```bash
-claude --plugin-dir ~/Documents/hdc-shopify-migration/plugins/shopify-migration
+claude --plugin-dir ~/Documents/hdc-shopify-migration/plugins/shopify-abnahme
 ```
 
 Prüfen und veröffentlichen:
 
 ```bash
-claude plugin validate ~/Documents/hdc-shopify-migration/plugins/shopify-migration
+claude plugin validate ~/Documents/hdc-shopify-migration/plugins/shopify-abnahme
 git add -A && git commit -m "Was geändert wurde" && git push
 ```
 
-Die Mitarbeiter bekommen die Änderung beim nächsten Marketplace-Abgleich.
-Eine Version muss dafür nicht hochgezählt werden — ohne `version`-Feld gilt der
-Commit-Stand als Version.
+Eine Version muss nicht hochgezählt werden — ohne `version`-Feld gilt der Commit-Stand.
 
-## Aufbau
+### Aufbau
 
 ```
 hdc-shopify-migration/
 ├── .claude-plugin/marketplace.json      Marketplace-Definition
-└── plugins/shopify-migration/
+└── plugins/<plugin>/
     ├── .claude-plugin/plugin.json       Plugin-Manifest
-    └── skills/shopify-migration/
+    └── skills/<skill>/
         ├── SKILL.md                     führt das Gespräch
         ├── references/                  Claude liest, gibt im Chat wieder
-        └── scripts/                     die Werkzeuge
+        ├── vorlagen/                    HTML-Vorlagen für Bildmotive
+        └── scripts/                     nummeriert in Ablaufreihenfolge
+            └── shopify.py               geteiltes Modul, in jedem Skill identisch
 ```
+
+`scripts/shopify.py` liegt bewusst in jedem Skill als Kopie — Skills sollen einzeln
+lauffähig sein. Änderungen daran gehören in alle Kopien.
+
+### Warum curl statt urllib
+
+Die Python-Standardbibliothek scheitert auf einigen Rechnern an der Zertifikatsprüfung.
+`gql()` ruft deshalb `curl` als Unterprozess auf. Das ist Absicht, kein Provisorium.
+
+### Lokale Installation ohne Marketplace
+
+Zum Entwickeln oder wenn die Marketplace-Installation nicht in Frage kommt, lassen sich
+die Skills direkt nach `~/.claude/skills/` hängen:
+
+```bash
+bash werkzeuge/lokal-installieren.sh
+```
+
+Das legt Symlinks an — Änderungen im Repo wirken damit sofort, ohne Neuinstallation.

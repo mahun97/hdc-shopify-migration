@@ -29,7 +29,7 @@ warum das stört, was stattdessen. Ohne den mittleren Satz ist es Geschmack.
 ## Grundregeln
 
 1. **Kein Umbau während der Prüfung.** Erst der vollständige Befund, dann die Umsetzung
-   über `shopify-uebergabe`. Wer während des Durchgangs schraubt, prüft am Ende sich selbst.
+   über `shopify-abnahme`. Wer während des Durchgangs schraubt, prüft am Ende sich selbst.
 2. **Geschmack von Fehler trennen.** "Ich hätte das anders gemacht" ist kein Befund.
    Ein Befund ist: jemand findet etwas nicht, versteht etwas falsch, oder bricht ab.
 3. **Nichts behaupten, was du nicht gesehen hast.** Besonders mobil — siehe unten.
@@ -41,7 +41,7 @@ warum das stört, was stattdessen. Ohne den mittleren Satz ist es Geschmack.
 Skripte liegen in `scripts/` neben dieser Datei:
 
 ```bash
-find ~/.claude -type d -name shopify-ux -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-ux -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Das Messbare
@@ -94,9 +94,10 @@ Trag deine Beobachtungen in `befunde/durchgang.json` ein, gleiche Form wie `ux.j
 ```
 
 `schwere`: `blocker` (verhindert den Kauf), `wichtig` (kostet Umsatz), `kosmetik`.
-`umsetzung`: `auto` nur, wenn es dafür in `shopify-uebergabe` wirklich einen Handgriff
+`umsetzung`: `auto` nur, wenn es dafür in `shopify-abnahme` wirklich einen Handgriff
 gibt — sonst `mensch`.
 
 > **Freigabe** — Befund besprochen, bevor irgendetwas geändert wird.
 
-Danach: `shopify-cro`, `shopify-recht`, zuletzt `shopify-uebergabe`.
+Danach: `shopify-cro`, `shopify-recht`, zuletzt `shopify-abnahme`.
+Oder von vornherein `shopify-abnahme` — der führt alle drei nacheinander.

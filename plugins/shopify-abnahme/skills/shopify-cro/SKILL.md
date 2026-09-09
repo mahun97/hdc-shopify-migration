@@ -37,12 +37,12 @@ gekauft hat" ist ein Befund.
    kein erfundener Stern.
 3. **Erst messen, dann behaupten.** Ohne Daten sagst du "das ist ein bekannter Hebel",
    nicht "das bringt 20 % mehr Umsatz".
-4. **Prüfen, nicht umbauen.** Umsetzung läuft über `shopify-uebergabe`.
+4. **Prüfen, nicht umbauen.** Umsetzung läuft über `shopify-abnahme`.
 
 ## Ablauf
 
 ```bash
-find ~/.claude -type d -name shopify-cro -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-cro -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Das Zählbare

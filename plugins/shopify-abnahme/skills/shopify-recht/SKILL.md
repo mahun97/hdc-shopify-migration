@@ -37,7 +37,7 @@ Schritt: welcher Text fehlt, wer ihn beschafft, wie lange das dauert.
 ## Ablauf
 
 ```bash
-find ~/.claude -type d -name shopify-recht -path '*skills*' 2>/dev/null | head -1
+find -L ~/.claude -type d -name shopify-recht -path '*skills*' 2>/dev/null | head -1
 ```
 
 ### Phase 1 — Pflichtangaben

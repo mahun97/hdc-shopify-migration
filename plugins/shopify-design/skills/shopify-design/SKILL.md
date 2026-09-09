@@ -122,11 +122,40 @@ python3 <pfad>/scripts/3_copy_ansicht.py
 Veröffentliche `Shop-Copy.html` als Artifact und gib der Person den Link. Fasse im Chat
 zusammen: für wen geschrieben, welche Botschaft trägt, wo Rückfragen offen sind.
 
-> **Freigabe 1** — Shop-Copy vom Kunden abgenommen. Erst danach geht es ins Theme.
+> **Freigabe 1** — Shop-Copy vom Kunden abgenommen.
 
 Nach der Freigabe Status auf `freigegeben` setzen und neu rendern.
 
-### Phase 4 — Theme inventarisieren
+### Phase 4 — Startseiten-Entwurf
+
+Die Copy sagt, *was* dasteht. Der Entwurf sagt, *wie es wirkt* — und aus ihm entstehen
+später die Sections. Beides in einem Schritt zu klären kostet zwei Runden statt einer.
+
+```
+python3 <pfad>/scripts/3b_entwurf.py --geruest
+… gestalten — das ist die eigentliche Arbeit …
+python3 <pfad>/scripts/3b_entwurf.py --pruefen
+```
+
+Das Gerüst zieht die Abschnittsfolge aus der freigegebenen Copy und legt Palette und
+Schriften aus dem Konzept an. Danach gestaltest du: eigene Typografie, echte Bilder,
+Abschnittsrhythmus. `references/entwurf.md` sagt, woran ein brauchbarer Entwurf zu
+erkennen ist.
+
+**Genau eine Startseite**, kein Klickdummy. Sie trägt die Gestaltungsentscheidung, alles
+Weitere folgt ihr.
+
+**Offene Punkte als Fußnote am Abschnitt**, nicht am Ende. Beim Gestalten fällt fast immer
+etwas auf, das vorher niemand gesehen hat — zwei widersprüchliche Versandregeln, ein Preis,
+den es zweimal gibt. Genau dort gehört der Hinweis hin.
+
+Die Prüfung endet mit Fehlercode, solange Blindtext, Platzhalter oder eine fehlende
+Entwurfs-Kennzeichnung drin sind. Bildplatzhalter für noch fehlende Kundenfotos sind
+dagegen in Ordnung — sie sind eine Lieferung, kein Mangel.
+
+> **Freigabe 2** — Entwurf vom Kunden abgenommen. Erst danach wird das Theme angefasst.
+
+### Phase 5 — Theme inventarisieren
 
 ```
 python3 <pfad>/scripts/4_theme_inventar.py
@@ -148,7 +177,7 @@ Farbeinstellungen. Ergebnis: `theme_inventar.json`.
 Leg sie der Person vor — dort fällt auf, wenn das Theme etwas nicht kann, das im
 Konzept steht. Das ist der Moment, das zu klären, nicht mitten im Aufbau.
 
-### Phase 5 — Aufbau
+### Phase 6 — Aufbau
 
 Zuerst ein **Duplikat** des Themes anlegen — nie am aktiven arbeiten. Das Duplikat entsteht
 asynchron; erst prüfen, ob die Dateien da sind, dann schreiben.
@@ -169,10 +198,14 @@ Vorlagen stammen aus den `presets` der Section-Schemas, die Phase 4 ausgelesen h
 Design. Lies `references/gestaltung.md` und setze in dieser Reihenfolge:
 
 1. **Schriften und Farbpalette** — `scripts/7_gestaltung.py`, aus dem Farbschema des Konzepts
-2. **Bildmotive** — `scripts/8_bilder.py` für Flächen und Kompositionen aus den
-   Markenfarben, `scripts/8b_bild_erzeugen.py` für erzeugte Stimmungen und freigestellte
-   Elemente. `--transparent` liefert einen echten Alphakanal und geht ohne Umweg als
-   `--foto` in die Vorlagen
+2. **Bilder**, vier Werkzeuge für vier Aufgaben:
+
+   | Skript | Wofür |
+   |---|---|
+   | `8_bilder.py` | Flächen, Bühnen, Kompositionen aus Markenfarben und Kundenfoto |
+   | `8b_bild_erzeugen.py` | einzelne Motive, Texturen, freigestellte Elemente (`--transparent`) |
+   | `8c_hero.py` | der Hero nach den HDC-Hero-Regeln, aus einem JSON-Prompt |
+   | `8d_kategoriebanner.py` | Kategoriebanner **als Satz** — ein Stil, viele Motive |
 3. **Sections aufbauen** — `scripts/5_aufbau.py`
 4. Header, Footer, dann die Templates: Startseite → Kategorie → Produkt → Unterseiten
 
@@ -190,9 +223,46 @@ Alles dazwischen — Hintergründe, Texturen, generische Elemente — ist erzeug
 den Unterschied zwischen einem Shop und einer Präsentationsfolie. Fehlen echte Fotos, sag
 es, und setze so lange ein Markenmotiv.
 
+#### Der Hero
+
+Der Hero ist das einzige Bild, das jeder Besucher sieht. Er entsteht nicht aus einem
+Halbsatz, sondern aus einem Interview — frag der Reihe nach: Was wird verkauft? Wer nutzt
+es, in welcher Situation? Läuft eine Aktion? Was genau soll beworben werden? Gibt es
+Beispielbilder oder Referenzshops? Welcher Stil?
+
+**Erst danach** schlägst du **drei Szenen auf Deutsch** vor, kurz und unterscheidbar —
+nicht drei Varianten derselben Idee. Nach der Auswahl baust du den JSON-Prompt auf
+Englisch, in der Struktur aus `references/hero-prompts.md`.
+
+Feste Regeln, die das Skript ohnehin anhängt: 3200×900, linke Hälfte frei für Text mit
+dezentem Overlay, Produkt und visuelle Elemente rechtsbündig, realistische Nutzungsszene,
+kein Text im Bild.
+
+```
+python3 <pfad>/scripts/8c_hero.py --vorlage > hero.json
+python3 <pfad>/scripts/8c_hero.py --json hero.json --name hero --overlay hell
+```
+
+#### Kategoriebanner
+
+Die sieht niemand einzeln. Wer sich durch den Shop klickt, sieht vier hintereinander —
+sie müssen als Satz wirken. Deshalb **eine Stil-Datei für alle** und nur das Motiv je
+Kollektion.
+
+```
+python3 <pfad>/scripts/8d_kategoriebanner.py --vorlage > stil.json
+python3 <pfad>/scripts/8d_kategoriebanner.py --stil stil.json --pruefen
+python3 <pfad>/scripts/8d_kategoriebanner.py --stil stil.json --alle --setzen
+```
+
+`--pruefen` sagt, welche Kollektionen kein Banner haben und für welche noch das Motiv
+fehlt. **Ein Motiv erfindet das Skript nicht** — was in einer Kategorie zu sehen ist,
+weiß der Kunde. Vor `--setzen` alle nebeneinander ansehen: Ein Satz, bei dem eines aus
+der Reihe fällt, wirkt schlechter als gar keiner.
+
 Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
 
-### Phase 6 — Theme-Einstellungen
+### Phase 7 — Theme-Einstellungen
 
 Farben und Schriften sind nur die Hälfte. Ein Theme hat ein paar Dutzend Schalter, die
 niemand sieht, bis sie falsch stehen — Quick-View, das zweite Bild beim Mouseover, der
@@ -222,7 +292,7 @@ Standorte, Märkte, Sprachen, Checkout-Branding, Benachrichtigungen — gehört 
 sondern in den Skill `shopify-settings`. Und **Schritt 3**, die Apps, installiert immer ein
 Mensch.
 
-### Phase 7 — Kategorie-, Produkt- und Serviceseiten
+### Phase 8 — Kategorie-, Produkt- und Serviceseiten
 
 Schritt 6 bis 8 der Checkliste. Drei Skripte, alle erst lesend, dann schreibend:
 
@@ -248,7 +318,7 @@ nicht hierher, die laufen über `shopify-settings`.
 
 Bewertungen, Größentabellen und Bundles kommen aus Apps. Die installiert ein Mensch.
 
-### Phase 8 — Prüfen
+### Phase 9 — Prüfen
 
 ```
 python3 <pfad>/scripts/6_pruefung.py --theme <duplikat-id>
@@ -274,7 +344,7 @@ behaupten, die nicht stattgefunden hat.
 Auffälligkeiten **dokumentieren, nicht stillschweigend beheben** — manches ist eine
 Designentscheidung, keine Panne.
 
-> **Freigabe 2** — Aufbau abgenommen.
+> **Freigabe 3** — Aufbau abgenommen.
 
 ## Wenn etwas hakt
 

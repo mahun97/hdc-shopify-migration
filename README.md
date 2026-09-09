@@ -135,35 +135,54 @@ wird, bevor irgendetwas ins Theme geht.
 | Skript | Was es tut |
 |---|---|
 | `1_konzept_lesen.py` | Liest Scope-Dokument und Konzeptpräsentation aus, inklusive Farbwerten |
+| `3b_entwurf.py` | Startseiten-Entwurf: Gerüst aus Copy und Konzept, danach Prüfung |
 | `2_copy_geruest.py` | Baut das Copy-Gerüst aus der Konzeptstruktur |
 | `3_copy_ansicht.py` | Rendert die Copy als HTML zur Freigabe |
 | `4_theme_inventar.py` | Liest, welche Sections und Blöcke dieses Theme wirklich hat |
 | `5_aufbau.py` | Setzt die freigegebene Copy in die Sections ein |
 | `6_pruefung.py` | Findet offene `[RÜCKFRAGE …]`, Platzhalter, nicht gesetzte Bilder |
 | `7_gestaltung.py` | Schriften und Farbpalette |
-| `8_bilder.py` | Erzeugt Bildmotive aus HTML-Vorlagen, stellt Produktfotos frei, lädt hoch |
+| `8_bilder.py` | Bildmotive aus HTML-Vorlagen, stellt Produktfotos frei, lädt hoch |
+| `8b_bild_erzeugen.py` | Einzelmotive über die OpenAI-Bild-API, `--transparent` für freigestellte Elemente |
+| `8c_hero.py` | Hero nach den HDC-Hero-Regeln aus einem JSON-Prompt, 3200×900 |
+| `8d_kategoriebanner.py` | Kategoriebanner als Satz — ein Stil, ein Motiv je Kollektion |
 | `9_checkliste.py` | Theme-Einstellungen nach HDC-Checkliste (Schritt 2) |
 | `10_kategorieseite.py` | Sortierung, ausverkaufte Artikel ans Ende, Filter, Banner, Bildformate (Schritt 6) |
 | `11_produktseite.py` | Verfügbarkeit, Versandhinweis, Akkordeon, Express-Checkout raus (Schritt 7) |
 | `12_serviceseiten.py` | FAQ, Versand, Zahlung, Über uns als Gerüst (Schritt 8) |
 
-**Bilder — drei Sorten, zwei davon machbar:**
+**Bilder — vier Werkzeuge, fünf Sorten, zwei harte Grenzen:**
 
-| | woher | machbar |
+| Sorte | woher | machbar |
 |---|---|---|
-| Fläche und Form — Verläufe, Bühnen, geometrische Motive | HTML-Vorlage | ja |
-| Komposition — freigestelltes Produktfoto auf so einer Fläche | Kundenfoto + Vorlage | ja |
-| Foto — Person bei der Anwendung, Situation | Shooting, Bildagentur | nein |
+| Fläche und Form | HTML-Vorlage | ja |
+| Stimmung, Textur, freigestelltes Element | erzeugt | ja |
+| Komposition aus Kundenfoto und Fläche | Kundenfoto + Vorlage | ja |
+| **Das Produkt des Kunden** | Shooting, Kunde | **nie erzeugen** |
+| **Menschen, die es wirklich gibt** | Shooting, Kunde | **nie erzeugen** |
 
-Freigestellt wird über die macOS-Vision-Bibliothek (`freisteller.swift`, kompiliert sich
-beim ersten Lauf selbst). Vorlagen mit Produktplatz: `motiv-buehne`, `motiv-produkt`.
+Die letzten beiden Zeilen sind keine Empfehlung. Ein erzeugtes Produktbild zeigt Ware,
+die es so nicht gibt; ein erzeugtes Gesicht behauptet einen Menschen. Soll das Produkt im
+Bild sein, kommt es als echtes Foto über `referenced_image_ids` hinein.
+
+Freigestellt wird über die macOS-Vision-Bibliothek oder direkt beim Erzeugen mit
+`--transparent`. Der Hero folgt festen Regeln — 3200×900, linke Hälfte frei für Text,
+alles Visuelle rechtsbündig, kein Text im Bild — und entsteht erst nach einem Interview
+und drei Szenenvorschlägen. Kategoriebanner entstehen immer als Satz aus einer Stil-Datei.
 
 **Harte Regeln:** Kein Text im Bild — er wäre nicht responsiv, nicht übersetzbar, nicht
 durchsuchbar, nicht vorlesbar. Nie auf dem aktiven Theme arbeiten, immer auf einem
 Duplikat; die Skripte verweigern das MAIN-Theme.
 
-Nachschlagen: `copywriting.md`, `gestaltung.md`, `theme-checkliste.json`,
-`zuordnung-horizon.json`, `fallen.md`.
+Nachschlagen: `copywriting.md`, `entwurf.md`, `gestaltung.md`, `hero-prompts.md`,
+`schluessel.md`, `theme-checkliste.json`, `zuordnung-horizon.json`, `fallen.md`.
+
+**Schlüssel:** Der OpenAI-Plattform-Schlüssel liegt in `~/.config/openai.env`, einmal je
+Rechner. Claude zeigt die Ablage und nimmt ihn nicht entgegen. Prüfen kostet nichts:
+
+```bash
+python3 scripts/8b_bild_erzeugen.py --schluessel-pruefen
+```
 
 ---
 
@@ -280,8 +299,8 @@ Zwei Dokumente in `dokumentation/`:
 
 | Datei | Was drin ist | Bauen |
 |---|---|---|
-| `HDC-Shopify-Prozess.pdf` | 20 Seiten Handbuch — Prinzip, Kette, Vorbereitung, alle vier Stufen mit Phasen und Freigaben, die Übergabe, im Anhang die Zuordnung der alten HDC-Checkliste | `bash dokumentation/bauen.sh` |
-| `HDC-Shopify-Prozess-Diagramme.pdf` | 5 Seiten nur Grafik, A4 quer — Gesamtprozess auf einem Blatt, dann je Stufe ein Ablaufdiagramm mit Skripten, Ergebnissen und Freigaben | `python3 dokumentation/diagramme.py` |
+| `HDC-Shopify-Prozess.pdf` | 23 Seiten Handbuch — Prinzip, Kette, Vorbereitung, alle vier Stufen mit Phasen und Freigaben, die Übergabe, im Anhang die Zuordnung der alten HDC-Checkliste | `bash dokumentation/bauen.sh` |
+| `HDC-Shopify-Prozess-Diagramme.pdf` | 7 Seiten nur Grafik, A4 quer — erst grob (vier Stufen), dann alle Phasen auf einem Blatt, dann je Stufe ein Ablaufdiagramm, zuletzt die Bildwerkzeuge | `python3 dokumentation/diagramme.py` |
 
 Beide brauchen Google Chrome. Das Handbuch zusätzlich `reportlab` und `pypdf` — Chrome
 rendert das Layout, reportlab stempelt Fußzeile und Seitenzahlen darüber, weil Chrome die

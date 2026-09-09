@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Erzeugt HDC-Shopify-Prozess-Diagramme.pdf — nur Grafik, kein Fliesstext.
 
-Seite 1  Gesamtprozess: vier Stufen, alle Phasen, alle Freigaben
-Seite 2  shopify-settings
-Seite 3  shopify-migration
-Seite 4  shopify-design
-Seite 5  shopify-abnahme mit den drei Fachpruefungen
+Seite 1  Gesamtprozess grob — vier Stufen, sonst nichts
+Seite 2  Alle Phasen und Freigaben auf einem Blatt
+Seite 3  shopify-settings
+Seite 4  shopify-migration
+Seite 5  shopify-design
+Seite 6  shopify-abnahme mit den drei Fachpruefungen
+Seite 7  Bildwerkzeuge — welches Skript fuer welche Bildsorte
 
 Aufruf:  python3 diagramme.py
 """
@@ -55,21 +57,26 @@ STUFEN = [
  {'nr': 3, 'skill': 'shopify-design', 'titel': 'Aufbau im Theme',
   'ergebnis': 'Theme-Duplikat',
   'schritte': [
+    {'n': 0, 't': 'Schlüssel',            'wer': 'hand', 'a': '~/.config/openai.env'},
     {'n': 1, 't': 'Unterlagen sichten',   'wer': 'hand', 'a': 'Scope · Konzept'},
     {'n': 2, 't': 'Konzept auswerten',    'wer': 'ki',   's': '1_konzept_lesen.py',
      'a': 'konzept.json'},
     {'n': 3, 't': 'Shop-Copy schreiben',  'wer': 'ki',
      's': '2_copy_geruest.py · 3_copy_ansicht.py', 'a': 'Shop-Copy.html'},
-    {'g': 'Shop-Copy vom Kunden abgenommen', 'kunde': True},
-    {'n': 4, 't': 'Theme inventarisieren','wer': 'ki',   's': '4_theme_inventar.py'},
-    {'n': 5, 't': 'Aufbau',               'wer': 'ki',
-     's': '7_gestaltung.py · 8_bilder.py · 5_aufbau.py', 'a': 'Sections · Templates'},
-    {'n': 6, 't': 'Theme-Einstellungen',  'wer': 'ki',   's': '9_checkliste.py',
+    {'g': 'Copy vom Kunden abgenommen'},
+    {'n': 4, 't': 'Startseiten-Entwurf',  'wer': 'ki',   's': '3b_entwurf.py',
+     'a': 'Entwurf-Startseite.html'},
+    {'g': 'Entwurf vom Kunden abgenommen'},
+    {'n': 5, 't': 'Theme inventarisieren','wer': 'ki',   's': '4_theme_inventar.py'},
+    {'n': 6, 't': 'Aufbau',               'wer': 'ki',
+     's': '7_gestaltung.py · 8_ 8b_ 8c_ 8d_ · 5_aufbau.py',
+     'a': 'Gestaltung · Bilder · Sections'},
+    {'n': 7, 't': 'Theme-Einstellungen',  'wer': 'ki',   's': '9_checkliste.py',
      'a': 'Logo · Favicon · Warenkorb'},
-    {'n': 7, 't': 'Kategorie, Produkt, Service', 'wer': 'ki',
+    {'n': 8, 't': 'Kategorie, Produkt, Service', 'wer': 'ki',
      's': '10_kategorieseite.py · 11_produktseite.py · 12_serviceseiten.py',
      'a': 'Sortierung · Bausteine · Seiten'},
-    {'n': 8, 't': 'Prüfen',               'wer': 'ki',   's': '6_pruefung.py',
+    {'n': 9, 't': 'Prüfen',               'wer': 'ki',   's': '6_pruefung.py',
      'a': '[RÜCKFRAGE …] finden'},
     {'g': 'Aufbau abgenommen'}]},
  {'nr': 4, 'skill': 'shopify-abnahme', 'titel': 'Abnahme & Übergabe',
@@ -153,6 +160,39 @@ def legende(y, rechts=False):
 
 
 # ---------------------------------------------------------------- Seite 1
+def seite_grob():
+    """Vier Stufen, sonst nichts. Der Blick, den man an die Wand haengt."""
+    o = kopf('Shop-Erstellung', 'Vier Stufen · jede setzt voraus, dass die vorige abgenommen ist')
+    n_ph = sum(len([x for x in st['schritte'] if 'n' in x]) for st in STUFEN)
+    n_fg = sum(len([x for x in st['schritte'] if 'g' in x]) for st in STUFEN)
+    br, luecke, y = 232, 44, 210
+    for i, st in enumerate(STUFEN):
+        x = 48 + i * (br + luecke)
+        ph = len([q for q in st['schritte'] if 'n' in q])
+        fg = len([q for q in st['schritte'] if 'g' in q])
+        o.append(f'<rect x="{x}" y="{y}" width="{br}" height="250" rx="10" fill="{BLAU}"/>')
+        o.append(sechseck(x + br / 2, y + 62, 34, '#FFFFFF'))
+        o.append(txt(x + br / 2, y + 73, str(st['nr']), 34, BLAU, 800, 'middle'))
+        o.append(txt(x + br / 2, y + 130, st['titel'], 17, '#FFFFFF', 700, 'middle'))
+        o.append(txt(x + br / 2, y + 152, st['skill'], 10.5, '#AEB4DC', 500, 'middle', mono=True))
+        o.append(f'<line x1="{x+30}" y1="{y+174}" x2="{x+br-30}" y2="{y+174}" '
+                 f'stroke="#3B45A0" stroke-width="1"/>')
+        o.append(txt(x + br / 2, y + 198, f'{ph} Phasen · {fg} Freigaben', 11, '#D5D8EE', 500, 'middle'))
+        o.append(txt(x + br / 2, y + 226, st['ergebnis'], 11.5, GOLD, 600, 'middle', mono=True))
+        if i < len(STUFEN) - 1:
+            xa = x + br + 8
+            o.append(f'<path d="M{xa} {y+125} h26 l-8 -7 m8 7 l-8 7" stroke="{BLAU}" '
+                     f'stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
+    o.append(f'<line x1="48" y1="{y+300}" x2="{B-48}" y2="{y+300}" stroke="{LINIE}"/>')
+    for i, (gross, klein) in enumerate((
+            (str(n_ph), 'Phasen insgesamt'), (str(n_fg), 'Freigabepunkte'),
+            ('7', 'Skills in 4 Plugins'), ('JA', 'vor jedem Schreibvorgang'))):
+        x = 48 + i * 268
+        o.append(txt(x, y + 348, gross, 32, BLAU, 800))
+        o.append(txt(x, y + 372, klein, 11, GRAU, 500))
+    return o
+
+
 def seite_gesamt():
     o = kopf('Shop-Erstellung — Gesamtprozess',
              '4 Stufen · 7 Skills · 26 Phasen · 11 Freigaben')
@@ -308,13 +348,70 @@ def pruefungen_kasten(o):
     return o
 
 
+def seite_bilder():
+    """Welches Skript fuer welche Bildsorte — und wo die Grenze liegt."""
+    o = kopf('Bilder', 'Vier Werkzeuge, fünf Bildsorten, zwei harte Grenzen')
+    spalten = [
+        ('8_bilder.py', 'Fläche und Form',
+         ['Verläufe und Bühnen', 'geometrische Motive', 'Komposition mit Kundenfoto',
+          'Freisteller über macOS Vision'], 'HTML-Vorlage, hier gerendert', 'ki'),
+        ('8b_bild_erzeugen.py', 'Einzelmotiv',
+         ['Texturen und Stimmungen', 'freigestellte Elemente', '--transparent gibt Alphakanal',
+          'geht direkt in die Vorlagen'], 'erzeugt, gpt-image-2', 'ki'),
+        ('8c_hero.py', 'Der Hero',
+         ['Interview vor dem Vorschlag', 'drei Szenen auf Deutsch', 'JSON-Prompt auf Englisch',
+          '3200×900, links frei'], 'erzeugt nach HDC-Regeln', 'ki'),
+        ('8d_kategoriebanner.py', 'Bannersatz',
+         ['ein Stil für alle', 'ein Motiv je Kollektion', 'Motiv kommt vom Kunden',
+          'setzt sie in die Kollektion'], 'erzeugt als Satz', 'ki'),
+    ]
+    br = (B - 96 - 3 * 14) / 4
+    for i, (skript, name, punkte, herkunft, wer) in enumerate(spalten):
+        x = 48 + i * (br + 14)
+        o.append(f'<rect x="{x}" y="156" width="{br}" height="286" rx="7" fill="#FFFFFF" '
+                 f'stroke="{LINIE}"/>')
+        o.append(f'<rect x="{x}" y="156" width="{br}" height="5" rx="2.5" fill="{BLAU}"/>')
+        o.append(txt(x + 16, 186, skript, 9.6, BLAU, 600, mono=True))
+        o.append(txt(x + 16, 210, name, 14, TEXT, 700))
+        o.append(txt(x + 16, 230, herkunft, 9.4, GRAU, 400))
+        for j, p in enumerate(punkte):
+            o.append(f'<circle cx="{x+19}" cy="{258+j*24}" r="2.4" fill="{GOLD}"/>')
+            for k, z in enumerate(umbruch(p, 28)):
+                o.append(txt(x + 29, 262 + j * 24 + k * 12, z, 9.6, TEXT, 400))
+    o.append(f'<rect x="48" y="470" width="{B-96}" height="118" rx="7" fill="#FDF4F3" '
+             f'stroke="#E8C4C0"/>')
+    o.append(txt(70, 502, 'Wird nie erzeugt', 14, '#B3261E', 700))
+    for i, (was, warum) in enumerate((
+            ('Das Produkt des Kunden',
+             'Zeigt Ware, die es so nicht gibt. Fällt auf, wenn das Paket ankommt.'),
+            ('Menschen, die es wirklich gibt',
+             'Ein erzeugtes Gesicht auf „Über uns" behauptet einen Menschen.'))):
+        x = 70 + i * 510
+        o.append(f'<path d="M{x} {528} h14" stroke="#B3261E" stroke-width="2"/>')
+        o.append(txt(x + 24, 532, was, 11.5, TEXT, 600))
+        for k, z in enumerate(umbruch(warum, 52)):
+            o.append(txt(x + 24, 550 + k * 14, z, 9.6, GRAU, 400))
+    o.append(txt(70, 618, 'Soll das Produkt im Bild sein: als echtes Foto über '
+                 'referenced_image_ids hineingeben oder nachträglich einkomponieren.',
+                 11, TEXT, 500))
+    o.append(f'<line x1="48" y1="654" x2="{B-48}" y2="654" stroke="{LINIE}"/>')
+    o.append(txt(48, 678, 'GRENZEN DES MODELLS', 7.6, GOLD, 700, ls=1.4))
+    for i, t in enumerate(('beide Seiten durch 16 teilbar', 'längste Kante höchstens 3840',
+                           'Seitenverhältnis höchstens 3:1',
+                           '3200×900 wird höher erzeugt, dann geschnitten')):
+        o.append(txt(48 + i * 264, 700, t, 10, GRAU, 400))
+    o += legende(H - 46)
+    return o
+
+
 def bauen():
-    seiten = [seite_gesamt()]
+    seiten = [seite_grob(), seite_gesamt()]
     for i, st in enumerate(STUFEN):
         if st['skill'] == 'shopify-abnahme':
             seiten.append(pruefungen_kasten(seite_stufe(st, spalten_zahl=1, breite=430)))
         else:
             seiten.append(seite_stufe(st))
+    seiten.append(seite_bilder())
     teile = []
     for inhalt in seiten:
         teile.append(f'<div class="blatt"><svg viewBox="0 0 {B} {H}" '

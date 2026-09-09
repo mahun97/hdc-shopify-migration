@@ -77,8 +77,8 @@ und keinen Befehl tippen.
 ### Reihenfolge
 
 ```
-shopify-settings  →  shopify-migration  →  shopify-design  →  shopify-abnahme
-   Rahmen              Produkte              Aufbau            Prüfung + Übergabe
+shopify-settings  →  shopify-design  →  shopify-migration  →  shopify-abnahme
+   Rahmen              Aufbau            Produkte             Prüfung + Übergabe
 ```
 
 Die Reihenfolge ist kein Vorschlag. Stehen Metafelder, Versandzonen und Pflichtangaben
@@ -150,6 +150,7 @@ wird, bevor irgendetwas ins Theme geht.
 | `10_kategorieseite.py` | Sortierung, ausverkaufte Artikel ans Ende, Filter, Banner, Bildformate (Schritt 6) |
 | `11_produktseite.py` | Verfügbarkeit, Versandhinweis, Akkordeon, Express-Checkout raus (Schritt 7) |
 | `12_serviceseiten.py` | FAQ, Versand, Zahlung, Über uns als Gerüst (Schritt 8) |
+| `13_demoprodukt.py` | Demo-Produkt mit allen Metafeldern — prüft die Kette vor der Migration |
 
 **Bilder — vier Werkzeuge, fünf Sorten, zwei harte Grenzen:**
 

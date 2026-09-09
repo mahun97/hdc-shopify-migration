@@ -72,18 +72,25 @@
         <td><code>shopify-settings</code> Ph. 2–5</td><td>weitgehend automatisch</td></tr>
     <tr><td>1 · Checkout-Branding, Kundenkonten, Benachrichtigungen</td>
         <td><code>shopify-settings</code> Ph. 6</td><td>geführt, von Hand</td></tr>
-    <tr><td>2 · Theme-Einstellungen</td><td><code>shopify-design</code> Ph. 6</td>
+    <tr><td>2 · Theme-Einstellungen</td><td><code>shopify-design</code> Ph. 8</td>
         <td>automatisch, soweit das Theme die Schalter hat</td></tr>
     <tr><td>3 · Apps</td><td>—</td><td>installiert immer ein Mensch</td></tr>
     <tr><td>4 · Produkte und Medien</td><td><code>shopify-migration</code></td>
-        <td>automatisch, Bildqualität wird geprüft und gemeldet</td></tr>
-    <tr><td>5 · Startseite</td><td><code>shopify-design</code> Ph. 5</td>
-        <td>automatisch aus der freigegebenen Copy</td></tr>
-    <tr><td>6 · Kategorieseite</td><td><code>shopify-design</code> Ph. 7</td>
+        <td>automatisch, Bildqualität wird geprüft und gemeldet. Läuft <strong>nach</strong>
+        dem Aufbau — die Metafelder sind am Demo-Produkt geprüft</td></tr>
+    <tr><td><em>neu</em> · Website-Konzept als HTML</td><td><code>shopify-design</code> Ph. 4</td>
+        <td>Gerüst automatisch, Gestaltung durch Claude, Abnahme durch den Kunden</td></tr>
+    <tr><td><em>neu</em> · Hero und Kategoriebanner</td><td><code>shopify-design</code> Ph. 6</td>
+        <td>erzeugt; Motive und Produktfotos kommen vom Kunden</td></tr>
+    <tr><td><em>neu</em> · Demo-Produkt für die Metafelder</td><td><code>shopify-design</code> Ph. 7</td>
+        <td>automatisch, Sichtprüfung im Theme durch einen Menschen</td></tr>
+    <tr><td>5 · Startseite</td><td><code>shopify-design</code> Ph. 4 + 8</td>
+        <td>Website-Konzept, daraus die Sections</td></tr>
+    <tr><td>6 · Kategorieseite</td><td><code>shopify-design</code> Ph. 9</td>
         <td>automatisch; Sortierung nach Bestand nur bei manuellen Kollektionen</td></tr>
-    <tr><td>7 · Produktseite</td><td><code>shopify-design</code> Ph. 7</td>
+    <tr><td>7 · Produktseite</td><td><code>shopify-design</code> Ph. 9</td>
         <td>Bausteine automatisch; Bewertungen, Größentabellen, Bundles brauchen Apps</td></tr>
-    <tr><td>8 · Service-Seiten</td><td><code>shopify-design</code> Ph. 7</td>
+    <tr><td>8 · Service-Seiten</td><td><code>shopify-design</code> Ph. 9</td>
         <td>Gerüst automatisch, Inhalte vom Kunden</td></tr>
     <tr><td><em>neu</em> · UX-, CRO- und Rechtsprüfung</td><td><code>shopify-abnahme</code></td>
         <td>messbarer Teil automatisch, Durchgang durch Menschen</td></tr>
@@ -95,7 +102,8 @@
   <ul class="strich">
     <li><strong>Metafeld unsichtbar im Theme.</strong> Die Definition braucht
       <code>access.storefront = PUBLIC_READ</code>. Ohne das ist das Feld im Admin
-      gefüllt und in der Storefront nicht vorhanden.</li>
+      gefüllt und in der Storefront nicht vorhanden. Genau dafür gibt es das
+      Demo-Produkt — der Fehler kostet dort zehn Minuten statt einen Tag.</li>
     <li><strong>Kollektion bleibt leer.</strong> Tag-Schreibweise vergleichen — ein
       <code>und</code> statt <code>&amp;</code> reicht. Und: Smart Collections berechnet
       Shopify verzögert, direkt nach dem Import wirken sie leer.</li>

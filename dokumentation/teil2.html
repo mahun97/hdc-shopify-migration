@@ -119,67 +119,211 @@ TOKEN=shpat_...</pre>
     erledigt, was bleibt offen, was liegt beim Kunden.</p></div></div>
 </section>
 
-<!-- ============ 5 ============ -->
+<!-- ============ 6 ============ -->
 <section class="kapitel">
   <div class="kopf"><span class="nr">Kapitel 5 · Stufe 2</span>
-    <h2>Produktmigration</h2>
-    <p class="lead"><code>shopify-migration</code> — sieben Phasen, fünf Freigaben. Die
-    dichteste Freigabe-Folge im ganzen Prozess, weil ein fehlerhafter Import hunderte
-    Datensätze betrifft.</p></div>
+    <h2>Aufbau im Theme</h2>
+    <p class="lead"><code>shopify-design</code> — elf Phasen, drei Freigaben. Zwei
+    Dokumente werden abgenommen, bevor das Theme überhaupt angefasst wird: erst die Copy,
+    dann der Startseiten-Entwurf.</p></div>
+
+  <div class="kasten"><strong>Warum zwei Abnahmen vor dem Theme</strong>
+    <p>Die Copy beantwortet, <em>was</em> dasteht. Der Entwurf beantwortet, <em>wie es
+    wirkt</em>. Beides gleichzeitig zu klären funktioniert nicht — über Farben zu
+    diskutieren, während der Text noch wackelt, kostet zwei Runden statt einer. Steht
+    beides, ist der Theme-Aufbau Ausführung statt Entwurf.</p></div>
+
+  <div class="phase"><div class="sechseck">0</div><div class="txt">
+    <strong>Schlüssel</strong>
+    <p>Einmal je Rechner. Claude <em>zeigt</em> die Ablage, nimmt den Schlüssel nicht
+    entgegen — er gehört in <code>~/.config/openai.env</code>, nicht in den Chat.
+    <code>--schluessel-pruefen</code> kostet nichts und unterscheidet einen falsch
+    kopierten Schlüssel von einer nicht verifizierten Organisation.</p>
+    <span class="skript">8b_bild_erzeugen.py --schluessel-pruefen</span></div></div>
 
   <div class="phase"><div class="sechseck">1</div><div class="txt">
-    <strong>Zugang</strong>
-    <p>Custom App und Token wie in Kapitel 3. Claude erzeugt sie nicht.</p></div></div>
-  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
-    <strong>Freigabe 1 — Zugang steht</strong></div></div>
+    <strong>Unterlagen sichten</strong>
+    <p>Scope-Dokument und Konzeptpräsentation. Fehlt eines von beidem, wird das gesagt
+    statt geraten.</p></div></div>
 
   <div class="phase"><div class="sechseck">2</div><div class="txt">
-    <strong>Browser (optional)</strong>
-    <p>Nur nötig, wenn Daten aus einem Altsystem oder einer Weboberfläche geholt werden
-    müssen, für die es keine Schnittstelle gibt.</p></div></div>
+    <strong>Konzept auswerten</strong>
+    <p>Liest Struktur, Abschnitte und Farbwerte aus — inklusive der Füllfarben von
+    Vektorflächen in der Präsentation.</p>
+    <span class="skript">1_konzept_lesen.py → konzept.json</span></div></div>
 
   <div class="phase"><div class="sechseck">3</div><div class="txt">
-    <strong>Shop verstehen</strong>
-    <p>Der Steckbrief liest den Zielshop aus: welche Metafelder gibt es, welche
-    Produktoptionen, welche Tag-Struktur, welche Kollektionen und nach welchen Regeln
-    füllen sie sich. Ohne diesen Schritt landen Produkte in leeren Kategorien, weil ein
-    Tag <code>beutel und rollen</code> heißt und die Kollektion
-    <code>beutel &amp; rollen</code> erwartet.</p>
-    <span class="skript">1_steckbrief.py</span></div></div>
+    <strong>Shop-Copy schreiben</strong>
+    <p>Als Senior Copywriter, nicht als Platzhalterfüller: Zielgruppe aus dem Konzept
+    ableiten, konversionsstark und zielgruppengerecht schreiben, das Dokument vollständig
+    füllen. Offene Stellen als <code>[RÜCKFRAGE …]</code>, nicht plausibel erfunden.</p>
+    <span class="skript">2_copy_geruest.py · 3_copy_ansicht.py → Shop-Copy.html</span></div></div>
+
   <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
-    <strong>Freigabe 2 — Tag-Vokabular bestätigt</strong></div></div>
+    <strong>Freigabe 1 — Shop-Copy vom Kunden abgenommen</strong></div></div>
 
   <div class="phase"><div class="sechseck">4</div><div class="txt">
-    <strong>Vorlage füllen</strong>
-    <p>Die Importvorlage wird passend zu <em>diesem</em> Shop erzeugt — mit genau den
-    Spalten, die er kennt. Beim Füllen gilt: Fehlende Maße, Gewichte, Preise und
-    Herstelleranschriften werden nicht ergänzt, sondern zur Rückfrage.</p>
-    <span class="skript">2_vorlage.py</span></div></div>
+    <strong>Startseiten-Entwurf</strong>
+    <p>Eine gestaltete HTML-Seite, die zeigt, wie die Startseite aussehen wird. Kein
+    Theme, kein Klickdummy, genau eine Seite — sie trägt die Gestaltungsentscheidung,
+    alles Weitere folgt ihr. Aus ihrer Abschnittsfolge entstehen später die Sections.</p>
+    <p>Das Gerüst zieht die Abschnitte aus der freigegebenen Copy und legt Palette und
+    Schriften an. Danach wird gestaltet — eigene Typografie, echte Bilder,
+    Abschnittsrhythmus. <strong>Offene Punkte als Fußnote am Abschnitt</strong>, nicht am
+    Ende: Beim Gestalten fällt fast immer etwas auf, das vorher niemand gesehen hat, etwa
+    zwei widersprüchliche Versandregeln.</p>
+    <p>Die Prüfung endet mit Fehlercode bei Blindtext, Platzhaltern oder fehlender
+    Entwurfs-Kennzeichnung. Bildplatzhalter für noch fehlende Kundenfotos sind dagegen in
+    Ordnung — eine Lieferung, kein Mangel.</p>
+    <span class="skript">3b_entwurf.py --geruest · --pruefen → Entwurf-Startseite.html</span></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 2 — Entwurf abgenommen. Erst danach wird das Theme angefasst.</strong></div></div>
 
   <div class="phase"><div class="sechseck">5</div><div class="txt">
-    <strong>Prüfen</strong>
-    <p>Vor dem Import: Pflichtfelder, doppelte SKUs, Handle-Kollisionen, Varianten, die
-    sich gegenseitig ausschließen, Bildzuordnungen. Der Lauf endet mit Fehlercode, solange
-    Blocker offen sind.</p>
-    <span class="skript">3_pruefen.py</span></div></div>
-  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
-    <strong>Freigabe 3 — Prüfung fehlerfrei</strong></div></div>
+    <strong>Theme inventarisieren</strong>
+    <p>Liest aus, welche Sections und Blöcke <em>dieses</em> Theme wirklich hat. Ein
+    Feldname aus einem anderen Projekt wird stillschweigend ignoriert.</p>
+    <span class="skript">4_theme_inventar.py</span></div></div>
 
   <div class="phase"><div class="sechseck">6</div><div class="txt">
-    <strong>Import</strong>
-    <p>Zuerst ein Probelauf mit wenigen Produkten, dann der Rest. Der Import ist nach
-    einem Abbruch wieder aufnehmbar — bereits angelegte Produkte werden übersprungen
-    statt doppelt erzeugt.</p>
-    <span class="skript">4_import.py</span></div></div>
-  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
-    <strong>Freigabe 4 — Probelauf in Ordnung</strong></div></div>
+    <strong>Aufbau</strong>
+    <p>Reihenfolge: erst Schriften und Farbpalette, dann die Bilder, dann die Sections aus
+    dem Entwurf, dann Header, Footer und die Templates. Gearbeitet wird immer auf einem
+    Theme-<strong>Duplikat</strong>; die Skripte verweigern das aktive Theme.</p>
+    <p>Der Aufbau zerfällt in drei sichtbare Schritte: <strong>Gestaltung</strong>
+    (Schriften und Farbpalette), <strong>Bilder</strong> (Hero, Kategoriebanner, Motive —
+    siehe nächstes Kapitel) und <strong>Sections</strong>, die aus dem freigegebenen
+    Entwurf entstehen, in derselben Reihenfolge.</p>
+    <span class="skript">7_gestaltung.py · 8_ 8b_ 8c_ 8d_ · 5_aufbau.py</span></div></div>
 
   <div class="phase"><div class="sechseck">7</div><div class="txt">
-    <strong>Abnahme</strong>
-    <p>Soll-Ist-Vergleich: Anzahl Produkte, Varianten, Bilder, Kollektionszuordnung.
-    Smart Collections füllen sich bei Shopify verzögert — direkt nach dem Import wirken
-    sie leer, obwohl alles stimmt.</p>
-    <span class="skript">5_abnahme.py</span></div></div>
+    <strong>Demo-Produkt</strong>
+    <p><strong>Vor</strong> der Migration, nicht danach. An einem einzigen Produkt wird die
+    ganze Kette geprüft: Definition da → Wert gesetzt → Storefront-Zugriff offen → Theme
+    gibt es aus.</p>
+    <p>Der Fehler, den dieser Schritt abfängt, ist immer derselbe: Ein Metafeld ist im
+    Admin gefüllt und im Theme unsichtbar, weil <code>access.storefront</code> nicht auf
+    <code>PUBLIC_READ</code> steht. Bei einem Produkt kostet das zehn Minuten. Bei
+    dreihundert kostet es einen Tag.</p>
+    <p>Das Produkt liegt als Entwurf mit Tag <code>hdc-demo</code> im Shop und wird vor dem
+    Livegang gelöscht — der Punkt steht auch in der Übergabe.</p>
+    <span class="skript">13_demoprodukt.py --anlegen · --entfernen</span></div></div>
+
+  <div class="phase"><div class="sechseck">8</div><div class="txt">
+    <strong>Theme-Einstellungen</strong>
+    <p>Schritt 2 der HDC-Checkliste: Logo, Favicon, Quick-View aus, zweites Bild bei
+    Mouseover, Warenkorb als Einschub, Bestellhinweis an, Express-Checkout aus,
+    „Powered by Shopify" raus. Das Skript liest erst das <code>settings_schema</code> und
+    arbeitet nur mit Schaltern, die es dort gibt.</p>
+    <span class="skript">9_checkliste.py --logo logo.png --favicon favicon.png --setzen</span></div></div>
+
+  <div class="phase"><div class="sechseck">9</div><div class="txt">
+    <strong>Kategorie-, Produkt- und Serviceseiten</strong>
+    <p>Schritt 6 bis 8 der Checkliste. Was eine Zusage an Käufer enthielte — Lieferzeit,
+    Versandkosten, Rückgabe — kommt als <code>[RÜCKFRAGE …]</code> hinein. Serviceseiten
+    bleiben <strong>unveröffentlicht</strong>, bis die Rückfragen beantwortet sind.</p>
+    <span class="skript">10_kategorieseite.py · 11_produktseite.py · 12_serviceseiten.py</span></div></div>
+
+  <div class="phase"><div class="sechseck">10</div><div class="txt">
+    <strong>Prüfen</strong>
+    <p>Offene Rückfrage-Marker, Platzhaltertexte, Sections ohne Kollektion, nicht gesetzte
+    Bilder, unangepasste Standardlinks. Danach der Browserdurchgang.</p>
+    <span class="skript">6_pruefung.py</span></div></div>
+
   <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
-    <strong>Freigabe 5 — Abnahme besprochen</strong></div></div>
+    <strong>Freigabe 3 — Aufbau abgenommen</strong></div></div>
 </section>
+
+<!-- ============ 6b ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 6 · Vertiefung</span>
+    <h2>Bilder</h2>
+    <p class="lead">Vier Werkzeuge, fünf Bildsorten, zwei harte Grenzen. Ein Shop ohne
+    Bilder ist eine Präsentationsfolie — und zwei Bildsorten dürfen trotzdem nie erzeugt
+    werden.</p></div>
+
+  <h3>Welches Werkzeug wofür</h3>
+  <table>
+    <tr><th style="width:26%">Skript</th><th style="width:22%">Bildsorte</th><th>Herkunft</th></tr>
+    <tr><td><code>8_bilder.py</code></td><td>Fläche und Form</td>
+        <td>HTML-Vorlage, hier gerendert. Verläufe, Bühnen, geometrische Motive — und
+        Kompositionen aus Kundenfoto plus Fläche, mit Freisteller über die
+        macOS-Vision-Bibliothek</td></tr>
+    <tr><td><code>8b_bild_erzeugen.py</code></td><td>Einzelmotiv</td>
+        <td>Erzeugt. Texturen, Stimmungen, freigestellte Elemente. <code>--transparent</code>
+        liefert einen echten Alphakanal und geht ohne Umweg als <code>--foto</code> in die
+        Vorlagen</td></tr>
+    <tr><td><code>8c_hero.py</code></td><td>Der Hero</td>
+        <td>Erzeugt nach den HDC-Hero-Regeln, aus einem JSON-Prompt</td></tr>
+    <tr><td><code>8d_kategoriebanner.py</code></td><td>Bannersatz</td>
+        <td>Erzeugt als Satz — ein Stil für alle Kollektionen, nur das Motiv unterscheidet
+        sich</td></tr>
+  </table>
+
+  <h3>Der Hero</h3>
+  <p>Das einzige Bild, das jeder Besucher sieht. Er entsteht aus einem Interview, nicht
+  aus einem Halbsatz.</p>
+  <ul class="strich">
+    <li>Was wird verkauft?</li>
+    <li>Wer nutzt es, in welcher Situation, an welchem Ort?</li>
+    <li>Läuft eine Aktion — Rabatt, Saison, Neueinführung?</li>
+    <li>Was genau soll beworben werden: das Sortiment, ein Produkt, ein Versprechen?</li>
+    <li>Gibt es Beispielbilder oder Referenzshops?</li>
+    <li>Welcher Stil — warm und wohnlich, technisch und klar, laut und werblich?</li>
+  </ul>
+  <p><strong>Erst danach</strong> drei Szenen auf Deutsch, die sich wirklich unterscheiden —
+  in Ort, Tageszeit oder Blickwinkel, nicht drei Varianten derselben Idee. Nach der
+  Auswahl der JSON-Prompt auf Englisch.</p>
+
+  <table>
+    <tr><th style="width:30%">Feste Regel</th><th>Warum</th></tr>
+    <tr><td>3200×900</td><td>Vollflächiger Streifen über die ganze Breite</td></tr>
+    <tr><td>Linke Hälfte frei</td><td>Dort steht die Headline. Dezentes Overlay, hell oder
+        dunkel je nach Textfarbe</td></tr>
+    <tr><td>Alles Visuelle rechtsbündig</td><td>Sonst kollidiert das Motiv mit dem Text</td></tr>
+    <tr><td>Realistische Nutzungsszene</td><td>Kein Studiofreisteller — der Hero zeigt eine
+        Situation, kein Produktfoto</td></tr>
+    <tr><td>Kein Text im Bild</td><td>Nicht responsiv, nicht übersetzbar, nicht
+        durchsuchbar, nicht vorlesbar</td></tr>
+  </table>
+  <p>Das Skript hängt diese Regeln bei jedem Lauf selbst an den Prompt — sie lassen sich
+  nicht versehentlich weglassen.</p>
+
+  <h3>Kategoriebanner</h3>
+  <p>Die sieht niemand einzeln. Wer sich durch den Shop klickt, sieht vier hintereinander.
+  Sie müssen als <strong>Satz</strong> wirken: gleiches Licht, gleiche Kamerahöhe, gleiche
+  Farbwelt — und nur das Motiv unterscheidet sich. Deshalb eine Stil-Datei für alle.</p>
+  <p><code>--pruefen</code> sagt, welche Kollektionen kein Banner haben und für welche noch
+  das Motiv fehlt. <strong>Ein Motiv erfindet das Skript nicht</strong> — was in einer
+  Kategorie zu sehen ist, weiß der Kunde. Vor dem Setzen alle nebeneinander ansehen: Ein
+  Satz, bei dem eines aus der Reihe fällt, wirkt schlechter als gar keiner.</p>
+
+  <div class="kasten warn"><strong>Zwei Bildsorten werden nie erzeugt</strong>
+    <p><strong>Das Produkt des Kunden.</strong> Ein erzeugtes Produktbild zeigt Ware, die
+    es so nicht gibt — irreführende Werbung, und zwar die Art, die auffällt, wenn das
+    Paket ankommt.</p>
+    <p><strong>Menschen, die es wirklich gibt.</strong> Ein erzeugtes Gesicht auf einer
+    „Über uns"-Seite behauptet einen Menschen, den es nicht gibt.</p>
+    <p>Soll das Produkt im Bild sein, kommt es als echtes Foto über
+    <code>referenced_image_ids</code> hinein oder wird nachträglich einkomponiert.</p></div>
+
+  <h3>Grenzen des Modells</h3>
+  <p>Empirisch ermittelt, nicht aus der Dokumentation übernommen.</p>
+  <table>
+    <tr><th style="width:34%">Grenze</th><th>Folge</th></tr>
+    <tr><td>Beide Seiten durch 16 teilbar</td><td>900 geht nicht, 896 schon</td></tr>
+    <tr><td>Längste Kante höchstens 3840</td><td>Genug für jeden Hero</td></tr>
+    <tr><td>Seitenverhältnis höchstens 3:1</td><td>3200×900 ist 3,56:1 und damit zu breit.
+        Das Skript erzeugt 3200×1072 und schneidet auf das Band herunter — reiner
+        Zuschnitt, kein Hochskalieren</td></tr>
+  </table>
+  <p>Modelle auf dem Schlüssel: <code>gpt-image-2</code> als Standard und das einzige mit
+  freien Größen, daneben <code>gpt-image-2-2026-04-21</code>, <code>gpt-image-1.5</code>,
+  <code>gpt-image-1</code>, <code>gpt-image-1-mini</code> und
+  <code>chatgpt-image-latest</code>.</p>
+  <p>Ein Hero in 3200×896 kostete im Test 4656 Token bei Qualität <code>high</code>, ein
+  Satz aus drei Kategoriebannern 11 188 Token. Das Skript gibt den Verbrauch nach jedem
+  Lauf aus — den Eurobetrag hat nur das Dashboard.</p>
+</section>
+

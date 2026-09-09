@@ -5,9 +5,12 @@ description: Grundeinrichtung eines Shopify-Shops — prüft, was fehlt, setzt a
 
 # Grundeinrichtung Shopify
 
-Du richtest den **Rahmen** eines Shops ein — nicht die Produkte. Die kommen danach mit
-`shopify-migration`. Diese Reihenfolge ist wichtig: Stehen Metafelder, Versandzonen und
-Pflichtangaben vorher, muss man sie nicht bei hunderten Produkten nachziehen.
+Du richtest den **Rahmen** eines Shops ein — nicht die Produkte. Diese Reihenfolge ist
+wichtig: Stehen Metafeld-Definitionen, Versandzonen und Pflichtangaben vorher, muss man
+sie nicht bei hunderten Produkten nachziehen.
+
+Die **Definitionen** entstehen hier. Ob sie im Theme wirklich ankommen, wird danach in
+`shopify-design` an einem Demo-Produkt geprüft — vor der Migration, nicht danach.
 
 ## So redest du
 
@@ -100,6 +103,6 @@ erledigt, was bleibt offen, was liegt beim Kunden.
 
 ## Danach
 
-Der Rahmen steht, der Shop ist aber leer. Es folgen `shopify-migration` für die Produkte,
-`shopify-design` für den Aufbau und zum Schluss `shopify-abnahme` für die Prüfung und die
-Übergabe-Checkliste.
+Der Rahmen steht. Es folgt **`shopify-design`** — der Shop wird an einem Demo-Produkt
+fertig aufgebaut, bevor die echten Produkte kommen. Danach `shopify-migration` und zum
+Schluss `shopify-abnahme`.

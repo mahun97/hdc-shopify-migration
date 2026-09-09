@@ -64,11 +64,22 @@ Prüfe danach Token und Berechtigungen und melde fehlende konkret.
 
 > **Freigabe 1** — Zugang steht.
 
-### Phase 2 — Browser (optional)
+### Phase 2 — Browser
 
-Frage, ob die Storefront geprüft werden soll. Wenn ja und die Erweiterung fehlt:
-`references/chrome.md` lesen und im Chat anleiten. Wenn nein: überspringen, aber sagen,
-dass die Abnahme dann weniger aussagekräftig ist.
+**Der Browser ist nicht optional.** Claude in Chrome läuft bei jeder Migration mit, nicht
+nur wenn Daten aus einem Altsystem geholt werden müssen. Der Grund: Was die API meldet und
+was im Shop steht, ist nicht dasselbe. Eine Kollektion kann laut API gefüllt sein und in
+der Storefront leer aussehen, ein Metafeld gesetzt und unsichtbar, ein Bild hochgeladen
+und dem falschen Produkt zugeordnet.
+
+Einrichtung steht in `references/chrome.md`. Genutzt wird er in drei Momenten:
+
+- **vor dem Import** — den Zielshop ansehen, wie ein Kunde ihn sieht
+- **nach dem Probelauf** — die ersten Produkte in der Storefront prüfen, nicht im Admin
+- **bei der Abnahme** — Stichproben über Kategorie, Produktseite, Warenkorb
+
+Steht der Browser nicht zur Verfügung, ist das ein Befund und keine Fußnote: Sag es, und
+bitte die Person, die Stichproben selbst zu gehen.
 
 ### Phase 3 — Shop verstehen
 
@@ -149,8 +160,10 @@ erfahrungsgemäß auftreten, mit Ursache und Abhilfe.
 
 ## Davor und danach
 
-**Davor:** `shopify-settings`. Stehen Metafeld-Definitionen, Versandzonen und
-Pflichtangaben vor dem Import, muss man sie nicht bei hunderten Produkten nachziehen.
+**Davor:** `shopify-settings` für den Rahmen, dann `shopify-design` für den Aufbau. Der
+Shop steht fertig — mit einem Demo-Produkt, an dem geprüft wurde, dass die Metafelder im
+Theme ankommen. Erst dann kommen die echten Produkte. Andersherum zieht man Metafelder
+bei hunderten Produkten nach.
 
-**Danach:** `shopify-design` baut das Theme auf, `shopify-abnahme` prüft den fertigen Shop
-und schreibt die Übergabe-Checkliste.
+**Danach:** `shopify-abnahme` prüft den fertigen Shop und schreibt die
+Übergabe-Checkliste.

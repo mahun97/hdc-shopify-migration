@@ -262,7 +262,30 @@ der Reihe fällt, wirkt schlechter als gar keiner.
 
 Nach jedem Schritt in der Vorschau ansehen und den Befund vorlegen.
 
-### Phase 7 — Theme-Einstellungen
+### Phase 7 — Demo-Produkt
+
+**Vor** der Produktmigration, nicht danach. An einem einzigen Produkt wird geprüft, ob die
+ganze Kette hält: Definition da → Wert gesetzt → Storefront-Zugriff offen → Theme gibt es
+aus.
+
+```
+python3 <pfad>/scripts/13_demoprodukt.py --theme <id> --pruefen
+python3 <pfad>/scripts/13_demoprodukt.py --anlegen
+```
+
+Das Skript legt ein Produkt als **Entwurf** mit Tag `hdc-demo` an und füllt jede
+Metafeld-Definition mit einem Demo-Wert. Felder, die auf echte Objekte verweisen, kann es
+nicht füllen — die nennt es, damit sie von Hand gesetzt werden.
+
+Dann in der Theme-Vorschau öffnen und **jedes Feld suchen**. Der Fehler, den dieser
+Schritt abfängt, ist immer derselbe: Ein Metafeld ist im Admin gefüllt und im Theme
+unsichtbar, weil `access.storefront` nicht auf `PUBLIC_READ` steht. Bei einem Produkt
+kostet das zehn Minuten. Bei dreihundert kostet es einen Tag.
+
+**Vor dem Livegang löschen:** `13_demoprodukt.py --entfernen`. Das steht auch in der
+Übergabe.
+
+### Phase 8 — Theme-Einstellungen
 
 Farben und Schriften sind nur die Hälfte. Ein Theme hat ein paar Dutzend Schalter, die
 niemand sieht, bis sie falsch stehen — Quick-View, das zweite Bild beim Mouseover, der
@@ -292,7 +315,7 @@ Standorte, Märkte, Sprachen, Checkout-Branding, Benachrichtigungen — gehört 
 sondern in den Skill `shopify-settings`. Und **Schritt 3**, die Apps, installiert immer ein
 Mensch.
 
-### Phase 8 — Kategorie-, Produkt- und Serviceseiten
+### Phase 9 — Kategorie-, Produkt- und Serviceseiten
 
 Schritt 6 bis 8 der Checkliste. Drei Skripte, alle erst lesend, dann schreibend:
 
@@ -318,7 +341,7 @@ nicht hierher, die laufen über `shopify-settings`.
 
 Bewertungen, Größentabellen und Bundles kommen aus Apps. Die installiert ein Mensch.
 
-### Phase 9 — Prüfen
+### Phase 10 — Prüfen
 
 ```
 python3 <pfad>/scripts/6_pruefung.py --theme <duplikat-id>
@@ -352,5 +375,6 @@ Designentscheidung, keine Panne.
 
 ## Danach
 
-Der Aufbau ist damit fertig, der Shop aber noch nicht übergabefähig. Es folgen
-`shopify-ux`, `shopify-cro` und `shopify-recht`, dann `shopify-uebergabe`.
+Der Shop steht — mit einem Demo-Produkt, an dem die Metafelder geprüft sind. Jetzt erst
+kommen die echten Produkte: **`shopify-migration`**. Danach `shopify-abnahme` für UX, CRO,
+Recht und die Übergabe-Checkliste.

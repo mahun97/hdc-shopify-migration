@@ -41,7 +41,7 @@ STUFEN = [
   'schritte': [
     {'n': 1, 't': 'Zugang',           'wer': 'hand', 'a': 'Custom App · Token'},
     {'g': 'Zugang steht'},
-    {'n': 2, 't': 'Browser',          'wer': 'ki',   'opt': True},
+    {'n': 2, 't': 'Browser einrichten','wer': 'hand', 'a': 'Claude in Chrome — Pflicht'},
     {'n': 3, 't': 'Shop verstehen',   'wer': 'ki',   's': '1_steckbrief.py',
      'a': 'Metafelder · Optionen · Tags'},
     {'g': 'Tag-Vokabular bestätigt'},
@@ -55,7 +55,7 @@ STUFEN = [
     {'n': 7, 't': 'Abnahme',          'wer': 'ki',   's': '5_abnahme.py', 'a': 'Soll-Ist'},
     {'g': 'Abnahme besprochen'}]},
  {'nr': 3, 'skill': 'shopify-design', 'titel': 'Aufbau im Theme',
-  'ergebnis': 'Theme-Duplikat',
+  'ergebnis': 'Theme-Duplikat + Demo-Produkt',
   'schritte': [
     {'n': 0, 't': 'Schlüssel',            'wer': 'hand', 'a': '~/.config/openai.env'},
     {'n': 1, 't': 'Unterlagen sichten',   'wer': 'hand', 'a': 'Scope · Konzept'},
@@ -64,19 +64,24 @@ STUFEN = [
     {'n': 3, 't': 'Shop-Copy schreiben',  'wer': 'ki',
      's': '2_copy_geruest.py · 3_copy_ansicht.py', 'a': 'Shop-Copy.html'},
     {'g': 'Copy vom Kunden abgenommen'},
-    {'n': 4, 't': 'Startseiten-Entwurf',  'wer': 'ki',   's': '3b_entwurf.py',
-     'a': 'Entwurf-Startseite.html'},
+    {'n': 4, 't': 'Website-Konzept',      'wer': 'ki',   's': '3b_entwurf.py',
+     'a': 'Entwurf-Startseite.html — daraus entstehen die Sections'},
     {'g': 'Entwurf vom Kunden abgenommen'},
     {'n': 5, 't': 'Theme inventarisieren','wer': 'ki',   's': '4_theme_inventar.py'},
-    {'n': 6, 't': 'Aufbau',               'wer': 'ki',
-     's': '7_gestaltung.py · 8_ 8b_ 8c_ 8d_ · 5_aufbau.py',
-     'a': 'Gestaltung · Bilder · Sections'},
-    {'n': 7, 't': 'Theme-Einstellungen',  'wer': 'ki',   's': '9_checkliste.py',
+    {'n': 6, 't': 'Gestaltung',           'wer': 'ki',   's': '7_gestaltung.py',
+     'a': 'Schriften · Farbpalette'},
+    {'n': 7, 't': 'Bilder',               'wer': 'ki',
+     's': '8_bilder.py · 8b_bild_erzeugen.py · 8c_hero.py · 8d_kategoriebanner.py',
+     'a': 'Hero · Kategoriebanner · Motive'},
+    {'n': 8, 't': 'Sections aufbauen',    'wer': 'ki',   's': '5_aufbau.py',
+     'a': 'aus dem Entwurf, in derselben Reihenfolge'},
+    {'n': 9, 't': 'Demo-Produkt',         'wer': 'ki',   's': '13_demoprodukt.py',
+     'a': 'Metafelder füllen und im Theme prüfen'},
+    {'n': 10, 't': 'Theme-Einstellungen', 'wer': 'ki',   's': '9_checkliste.py',
      'a': 'Logo · Favicon · Warenkorb'},
-    {'n': 8, 't': 'Kategorie, Produkt, Service', 'wer': 'ki',
-     's': '10_kategorieseite.py · 11_produktseite.py · 12_serviceseiten.py',
-     'a': 'Sortierung · Bausteine · Seiten'},
-    {'n': 9, 't': 'Prüfen',               'wer': 'ki',   's': '6_pruefung.py',
+    {'n': 11, 't': 'Kategorie, Produkt, Service', 'wer': 'ki',
+     's': '10_ · 11_ · 12_', 'a': 'Sortierung · Bausteine · Seiten'},
+    {'n': 12, 't': 'Prüfen',              'wer': 'ki',   's': '6_pruefung.py',
      'a': '[RÜCKFRAGE …] finden'},
     {'g': 'Aufbau abgenommen'}]},
  {'nr': 4, 'skill': 'shopify-abnahme', 'titel': 'Abnahme & Übergabe',
@@ -92,6 +97,12 @@ STUFEN = [
     {'n': 4, 't': 'Übergabe',            'wer': 'ki', 's': 'uebergabe.py', 'a': 'Uebergabe.md'},
     {'g': 'Übergabe abgenommen'}]},
 ]
+
+# Reihenfolge: erst der Shop steht — mit einem Demo-Produkt, an dem die Metafelder
+# geprueft werden — dann kommen die echten Produkte. Andersherum muesste man
+# Metafelder bei hunderten Produkten nachziehen.
+STUFEN = [STUFEN[0], STUFEN[2], STUFEN[1], STUFEN[3]]
+for _i, _st in enumerate(STUFEN): _st['nr'] = _i + 1
 
 FARBE = {'ki': BLAU, 'hand': DUNKEL, 'kunde': GOLD}
 
@@ -194,8 +205,10 @@ def seite_grob():
 
 
 def seite_gesamt():
-    o = kopf('Shop-Erstellung — Gesamtprozess',
-             '4 Stufen · 7 Skills · 26 Phasen · 11 Freigaben')
+    n_ph = sum(len([x for x in st['schritte'] if 'n' in x]) for st in STUFEN)
+    n_fg = sum(len([x for x in st['schritte'] if 'g' in x]) for st in STUFEN)
+    o = kopf('Shop-Erstellung — alle Phasen',
+             f'{len(STUFEN)} Stufen · 7 Skills · {n_ph} Phasen · {n_fg} Freigaben')
     sp_b, luecke, y0 = 244, 12, 156
     for i, st in enumerate(STUFEN):
         x = 48 + i * (sp_b + luecke)
@@ -212,6 +225,7 @@ def seite_gesamt():
             o.append(f'<path d="M{xa} {y0+26} h7 l-3 -4 m3 4 l-3 4" stroke="{BLAU}" '
                      f'stroke-width="1.8" fill="none" stroke-linecap="round"/>')
         y = y0 + 70
+        eng = len(st['schritte']) > 11        # Design-Stufe ist die laengste
         for s in st['schritte']:
             if 'g' in s:
                 o.append(f'<rect x="{x+10}" y="{y-11}" width="{sp_b-20}" height="21" rx="10.5" '
@@ -219,7 +233,7 @@ def seite_gesamt():
                 o.append(sechseck(x + 22, y - 0.5, 7.5, GOLD))
                 o.append(txt(x + 22, y + 2.5, '✓', 8, '#FFFFFF', 700, 'middle'))
                 o.append(txt(x + 34, y + 3, s['g'], 8.6, '#7A6C42', 600))
-                y += 30; continue
+                y += 25 if eng else 30; continue
             f = FARBE[s['wer']]
             if s['wer'] == 'hand':
                 o.append(f'<circle cx="{x+21}" cy="{y}" r="8.2" fill="#FFFFFF" '
@@ -228,14 +242,14 @@ def seite_gesamt():
             else:
                 o.append(f'<circle cx="{x+21}" cy="{y}" r="9" fill="{f}"/>')
                 o.append(txt(x + 21, y + 3.4, str(s['n']), 9.5, '#FFFFFF', 700, 'middle'))
-            zeilen = umbruch(s['t'], 26)
+            zeilen = umbruch(s['t'], 24 if eng else 26)
             for j, z in enumerate(zeilen):
                 o.append(txt(x + 36, y + 3.5 + j * 12 - (len(zeilen) - 1) * 6, z, 10, TEXT, 600))
             yy = y + 6 + (len(zeilen) - 1) * 6
-            if s.get('a'):
+            if s.get('a') and not eng:
                 yy += 12
                 o.append(txt(x + 36, yy, s['a'], 8.2, GRAU, 400, mono=True))
-            y = yy + 24
+            y = yy + (13 if eng else 24)
         o.append(f'<line x1="{x+10}" y1="{H-140}" x2="{x+sp_b-10}" y2="{H-140}" '
                  f'stroke="{LINIE}" stroke-width="1"/>')
         o.append(txt(x + 12, H - 124, 'ERGEBNIS', 7.4, GOLD, 700, ls=1.4))

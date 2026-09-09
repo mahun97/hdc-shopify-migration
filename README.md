@@ -276,19 +276,19 @@ Diese Grenzen sind in den Skills festgeschrieben, nicht Auslegungssache:
 
 ## Prozessdokumentation
 
-`dokumentation/HDC-Shopify-Prozess.pdf` — der gesamte Ablauf auf 20 Seiten: Prinzip,
-Kette, Vorbereitung, alle vier Stufen mit ihren Phasen und Freigaben, die Übergabe, und
-im Anhang die Zuordnung der alten HDC-Checkliste zu den neuen Skills.
+Zwei Dokumente in `dokumentation/`:
 
-Neu bauen nach Änderungen am Prozess:
+| Datei | Was drin ist | Bauen |
+|---|---|---|
+| `HDC-Shopify-Prozess.pdf` | 20 Seiten Handbuch — Prinzip, Kette, Vorbereitung, alle vier Stufen mit Phasen und Freigaben, die Übergabe, im Anhang die Zuordnung der alten HDC-Checkliste | `bash dokumentation/bauen.sh` |
+| `HDC-Shopify-Prozess-Diagramme.pdf` | 5 Seiten nur Grafik, A4 quer — Gesamtprozess auf einem Blatt, dann je Stufe ein Ablaufdiagramm mit Skripten, Ergebnissen und Freigaben | `python3 dokumentation/diagramme.py` |
 
-```bash
-bash dokumentation/bauen.sh
-```
+Beide brauchen Google Chrome. Das Handbuch zusätzlich `reportlab` und `pypdf` — Chrome
+rendert das Layout, reportlab stempelt Fußzeile und Seitenzahlen darüber, weil Chrome die
+CSS-Randboxen für Seitenzahlen nicht kennt.
 
-Braucht Google Chrome, `reportlab` und `pypdf`. Chrome rendert das Layout, reportlab
-stempelt Fußzeile und Seitenzahlen darüber — die CSS-Randboxen für Seitenzahlen kennt
-Chrome nicht.
+Die Diagramme entstehen als SVG aus einer einzigen Datenstruktur in `diagramme.py`.
+Ändert sich eine Phase, wird sie dort geändert — nicht in fünf Zeichnungen.
 
 ## Updates
 

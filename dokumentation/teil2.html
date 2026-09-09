@@ -290,6 +290,21 @@ TOKEN=shpat_...</pre>
   <p>Das Skript hängt diese Regeln bei jedem Lauf selbst an den Prompt — sie lassen sich
   nicht versehentlich weglassen.</p>
 
+  <p>Der Lauf endet <strong>nicht bei der PNG-Datei</strong>. Ein zweiter Aufruf lädt das
+  Bild in die Shop-Dateien und trägt es in die Hero-Section ein. Zwei Schritte, weil
+  dazwischen jemand hinsehen muss — und weil ein Hero im Theme anders wirkt als in der
+  Datei.</p>
+
+  <div class="kasten warn"><strong>Das Modell erfindet Produkte dazu</strong>
+    <p>Im ersten echten Lauf für einen Desinfektionsmittel-Shop standen plötzlich zwei
+    Sprühflaschen auf der Arbeitsfläche. In der Objektliste stand nur „Tuch, Pflanze,
+    Spülbeckenkante" — das Modell hat sie ergänzt, weil sie zur Szene passen.</p>
+    <p>Genau dort wird aus einem Stimmungsbild ein Produktbild. <strong>Die
+    Produktkategorie des Kunden gehört in die Negativliste des Prompts</strong>: Verkauft
+    er Flaschen, dann <code>no bottles, no containers, no packaging</code>. Und vor dem
+    Einsetzen prüfen: Ist etwas auf dem Bild, das ein Käufer für das bestellte Produkt
+    halten könnte?</p></div>
+
   <h3>Kategoriebanner</h3>
   <p>Die sieht niemand einzeln. Wer sich durch den Shop klickt, sieht vier hintereinander.
   Sie müssen als <strong>Satz</strong> wirken: gleiches Licht, gleiche Kamerahöhe, gleiche

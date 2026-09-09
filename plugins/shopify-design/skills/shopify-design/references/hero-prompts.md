@@ -33,12 +33,19 @@ Blickwinkel wirklich unterscheiden.
 
 **3. Nach der Auswahl: der JSON-Prompt auf Englisch.** Struktur unten.
 
-**4. Erzeugen, ansehen, entscheiden.**
+**4. Erzeugen, ansehen, entscheiden.** Dann in einem zweiten Aufruf in den Shop.
 
 ```
 python3 scripts/8c_hero.py --vorlage > hero.json
 python3 scripts/8c_hero.py --json hero.json --name hero --overlay hell
+… ansehen …
+python3 scripts/8c_hero.py --json hero.json --name hero --overlay hell \
+    --shop --theme <duplikat-id> --section hero --feld image_1
 ```
+
+Der zweite Aufruf lädt in die Shop-Dateien und trägt das Bild in die Section ein. Zwei
+Schritte, weil dazwischen jemand hinsehen muss — und weil ein Hero, den man ungesehen
+einsetzt, im Theme anders wirkt als in der Datei.
 
 `--overlay dunkel` bei heller Szene und weißer Schrift, `hell` bei dunkler Szene und
 schwarzer Schrift, `kein` wenn die Szene links ohnehin ruhig genug ist.
@@ -98,6 +105,25 @@ und schneidet auf das Band herunter — reiner Zuschnitt, kein Hochskalieren. Ei
 Modelle auf dem Schlüssel: `gpt-image-2` (Standard, einziges mit freien Größen),
 `gpt-image-2-2026-04-21`, `gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini`,
 `chatgpt-image-latest`. Wechseln mit `--modell`.
+
+## Das Modell erfindet Produkte dazu
+
+Der wichtigste Befund aus dem ersten echten Lauf: In einem Hero für einen
+Desinfektionsmittel-Shop standen plötzlich **zwei Sprühflaschen** auf der Arbeitsfläche.
+In `secondary_objects` stand nur „Tuch, Pflanze, Spülbeckenkante". Das Modell hat sie
+ergänzt, weil sie zur Szene passen.
+
+Das ist der Moment, in dem aus einem Stimmungsbild ein Produktbild wird — und damit ein
+Bild, das Ware zeigt, die es so nicht gibt.
+
+**Gegenmittel: Die Produktkategorie des Kunden gehört ausdrücklich in die Negativliste.**
+Verkauft er Flaschen, dann `no bottles, no containers, no packaging`. Verkauft er Böden,
+dann kein hervorgehobener Bodenbelag im Vordergrund, sondern nur als Fläche, auf der die
+Szene steht. Verkauft er Fenster, dann `no windows in focus`.
+
+Prüf jedes erzeugte Bild darauf, **bevor** es in den Shop geht: Ist etwas darauf, das ein
+Käufer für das bestellte Produkt halten könnte? Dann neu erzeugen oder das echte Foto über
+`referenced_image_ids` hineingeben.
 
 ## Die harte Grenze
 

@@ -8,9 +8,14 @@ Feste Regeln (aus dem HDC-Hero-Prompt-Generator):
   * realistische Nutzungsszenen, kein Text im Bild
 
 Aufruf:
-  python3 8c_hero.py --json hero.json --name hero-wohnraum
-  python3 8c_hero.py --json hero.json --name hero --overlay dunkel
-  python3 8c_hero.py --vorlage > hero.json      leere Struktur ausgeben
+  python3 8c_hero.py --vorlage > hero.json                      leere Struktur
+  python3 8c_hero.py --json hero.json --name hero               nur erzeugen
+  python3 8c_hero.py --json hero.json --name hero \\
+      --shop --theme <id> --section hero --feld image_1         bis in den Shop
+
+Ohne --shop bleibt das Bild lokal. Mit --shop laedt es in die Shop-Dateien und traegt
+sich in die Section ein. Dazwischen gehoert der Blick darauf — deshalb sind es zwei
+Schritte und nicht einer.
 
 Modelle: gpt-image-2 kann beliebige Groessen unter drei Bedingungen — beide Seiten durch
 16 teilbar, laengste Kante hoechstens 3840, Seitenverhaeltnis hoechstens 3:1. Ein Hero mit
@@ -19,7 +24,8 @@ Modelle: gpt-image-2 kann beliebige Groessen unter drei Bedingungen — beide Se
 Hochskalieren. Aeltere Modelle (gpt-image-1, gpt-image-1.5) koennen nur 1024×1024,
 1024×1536 und 1536×1024 — dann schneidet und skaliert das Skript und sagt es dazu.
 """
-import sys, os, json, base64, subprocess, tempfile, datetime
+import sys, os, json, base64, subprocess, tempfile, datetime, re, time, urllib.parse
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 MODELL_FREI = ('gpt-image-2', 'gpt-image-2-2026-04-21', 'chatgpt-image-latest')
 MODELL_FEST = {'1024x1024', '1024x1536', '1536x1024'}
@@ -165,6 +171,50 @@ def hero_band(roh, ziel_b, ziel_h, overlay, name):
     aus.save(ziel)
     return ziel, faktor, os.path.getsize(ziel)
 
+def in_den_shop(datei, alt):
+    """Laedt das Hero-Bild in die Shop-Dateien und traegt es in die Section ein."""
+    from shopify import zugang, gql, pruefe_fehler, bild_hochladen
+    env = zugang(arg('--shop-env'))
+    tid, section = arg('--theme', True), arg('--section', False, 'hero')
+    feld = arg('--feld', False, 'image_1')
+    tpl = arg('--template', False, 'index')
+
+    theme = gql(env, 'query($id:ID!){ theme(id:$id){ name role } }',
+                {'id': f'gid://shopify/OnlineStoreTheme/{tid}'})['theme']
+    if theme['role'] == 'MAIN':
+        fehler('Das ist das aktive Theme. Bitte auf einem Duplikat arbeiten.')
+
+    dateiname = bild_hochladen(env, datei, alt)
+    print(f'  Hochgeladen als shopify://shop_images/{dateiname}')
+
+    basis = f"https://{env['SHOP']}/admin/api/2025-07/themes/{tid}/assets.json"
+    kopf = ['-H', f"X-Shopify-Access-Token: {env['TOKEN']}"]
+    u = f"{basis}?asset%5Bkey%5D=templates%2F{tpl}.json"
+    r = subprocess.run(['curl', '-sS', u] + kopf, capture_output=True, text=True, timeout=120)
+    try:
+        roh = json.loads(r.stdout)['asset']['value']
+    except Exception:
+        fehler(f'templates/{tpl}.json nicht lesbar')
+    tj = json.loads(re.sub(r'/\*.*?\*/', '', roh, flags=re.S))
+    getroffen = []
+    for sid, sec in (tj.get('sections') or {}).items():
+        if sec.get('type') == section:
+            sec.setdefault('settings', {})[feld] = f'shopify://shop_images/{dateiname}'
+            getroffen.append(sid)
+    if not getroffen:
+        vorhanden = ', '.join(sorted({v.get('type', '?') for v in (tj.get('sections') or {}).values()}))
+        fehler(f'Keine Section "{section}" in templates/{tpl}.json.\n'
+               f'          Vorhanden sind: {vorhanden}')
+    p = json.dumps({'asset': {'key': f'templates/{tpl}.json',
+                              'value': json.dumps(tj, ensure_ascii=False, indent=2)}})
+    r2 = subprocess.run(['curl', '-sS', '-X', 'PUT', basis] + kopf +
+                        ['-H', 'Content-Type: application/json', '-d', p],
+                        capture_output=True, text=True, timeout=180)
+    if '"asset"' not in r2.stdout: fehler(r2.stdout[:300])
+    print(f'  In {len(getroffen)}× Section "{section}" eingesetzt ({feld}).')
+    print(f'  Vorschau: https://{env["SHOP"]}/?preview_theme_id={tid}')
+
+
 def main():
     j = json.load(open(arg('--json', True), encoding='utf-8'))
     name = arg('--name', True)
@@ -218,7 +268,17 @@ def main():
               + ('  ← ab 2.0 bei feinen Texturen sichtbar' if faktor >= 2 else ''))
     else:
         print('  Nicht hochskaliert.')
-    print('\n  Ansehen. Der Text kommt aus der Section, nicht ins Bild.\n')
+    if '--shop' not in sys.argv:
+        print('\n  Ansehen. Der Text kommt aus der Section, nicht ins Bild.')
+        print('  Passt es, mit --shop --theme <id> in den Shop einsetzen.\n')
+        return
+    print()
+    from shopify import gate
+    gate(f'Hero in den Shop laden und in Section "{arg("--section", False, "hero")}" einsetzen.')
+    alt = (j.get('metadata') or {}).get('title') or name.replace('-', ' ')
+    in_den_shop(ziel, alt)
+    print('\n  Jetzt in der Vorschau ansehen — der Zuschnitt wirkt im Theme anders '
+          'als in der Datei.\n')
 
 if __name__ == '__main__':
     main()

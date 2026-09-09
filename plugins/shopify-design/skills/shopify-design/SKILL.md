@@ -241,7 +241,19 @@ kein Text im Bild.
 ```
 python3 <pfad>/scripts/8c_hero.py --vorlage > hero.json
 python3 <pfad>/scripts/8c_hero.py --json hero.json --name hero --overlay hell
+… ansehen …
+python3 <pfad>/scripts/8c_hero.py --json hero.json --name hero --overlay hell \\
+    --shop --theme <duplikat-id> --section hero --feld image_1
 ```
+
+Der zweite Aufruf geht den ganzen Weg: hochladen in die Shop-Dateien, eintragen in die
+Section, Vorschaulink. **Du lieferst das fertige Hero-Bild im Shop ab, nicht einen Prompt
+und nicht eine PNG-Datei.**
+
+**Vor dem Einsetzen prüfen, ob das Modell Produkte dazuerfunden hat.** Es tut das: In
+einem Hero für einen Desinfektionsmittel-Shop standen zwei Sprühflaschen auf der Fläche,
+die in der Objektliste nicht vorkamen. Damit wird aus einem Stimmungsbild ein Produktbild.
+Die Produktkategorie des Kunden gehört deshalb in die Negativliste des Prompts.
 
 #### Kategoriebanner
 

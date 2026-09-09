@@ -41,14 +41,25 @@ printf 'KEY=sk-DEIN_SCHLUESSEL\n' > ~/.config/openai.env && chmod 600 ~/.config/
 python3 scripts/8b_bild_erzeugen.py --schluessel-pruefen
 ```
 
-Erwartete Ausgabe: `ok  Schlüssel gültig, gpt-image-1 freigeschaltet.`
+Erwartete Ausgabe: `ok  Schlüssel gültig, gpt-image-2 freigeschaltet.`
 
 ### Wenn die Prüfung meckert
 
 | Meldung | Ursache | Lösung |
 |---|---|---|
 | `401` | Schlüssel falsch kopiert oder widerrufen | Neu erzeugen, Schritt 3–4 wiederholen |
-| `403` / `404` | Organisation nicht verifiziert | Im OpenAI-Dashboard unter Settings → Organization die Verifizierung abschließen. `gpt-image-1` setzt sie voraus |
+| `403` / `404` | Organisation nicht verifiziert | Im OpenAI-Dashboard unter Settings → Organization die Verifizierung abschließen. Die Bildmodelle setzen sie voraus |
+
+### Welche Modelle der Schlüssel kann
+
+```bash
+curl -sS https://api.openai.com/v1/models -H "Authorization: Bearer $(grep ^KEY= ~/.config/openai.env | cut -d= -f2-)" \
+  | python3 -c "import json,sys; [print(' ', x['id']) for x in sorted(json.load(sys.stdin)['data'], key=lambda m: m['id']) if 'image' in x['id']]"
+```
+
+Stand September 2026: `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-1.5`,
+`gpt-image-1`, `gpt-image-1-mini`, `chatgpt-image-latest`. Standard im Kit ist
+`gpt-image-2` — nur das kann freie Bildgrößen.
 | Datei fehlt | Schritt 4 übersprungen | Das Skript druckt die Anleitung selbst |
 
 ## Shopify-Token

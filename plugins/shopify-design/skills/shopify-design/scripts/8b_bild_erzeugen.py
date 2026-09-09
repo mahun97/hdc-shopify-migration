@@ -12,9 +12,14 @@ Aufruf:
   python3 8b_bild_erzeugen.py --prompt "…" --name hero-grund
   python3 8b_bild_erzeugen.py --prompt "…" --name element --transparent
   python3 8b_bild_erzeugen.py --prompt "…" --name breit --format quer --qualitaet hoch
+  python3 8b_bild_erzeugen.py --prompt "…" --name band --groesse 2400x1008
 
 Formate: quadrat (1024×1024) · quer (1536×1024) · hoch (1024×1536)
+Freie Groesse mit --groesse, nur bei gpt-image-2: beide Seiten durch 16 teilbar,
+laengste Kante hoechstens 3840, Seitenverhaeltnis hoechstens 3:1.
 Qualitaet: niedrig · mittel · hoch
+Modell mit --modell, Standard gpt-image-2. Verfuegbar sind ausserdem gpt-image-1,
+gpt-image-1-mini, gpt-image-1.5 und chatgpt-image-latest.
 
 WICHTIG — was hier nicht erzeugt wird:
   Bilder des Produkts, das der Kunde verkauft. Ein generiertes Produktbild zeigt ein
@@ -32,6 +37,9 @@ def fehler(t):
     print(f'\n  FEHLER  {t}\n', file=sys.stderr); sys.exit(1)
 
 FORMATE = {'quadrat': '1024x1024', 'quer': '1536x1024', 'hoch': '1024x1536'}
+# gpt-image-2 kann daneben freie Groessen: beide Seiten durch 16 teilbar,
+# laengste Kante <= 3840, Seitenverhaeltnis <= 3:1.
+MODELL_STANDARD = 'gpt-image-2'
 QUALITAET = {'niedrig': 'low', 'mittel': 'medium', 'hoch': 'high'}
 
 def schluessel(pfad=None):
@@ -61,24 +69,24 @@ ANLEITUNG = '''
 
   Der Schlüssel gehört NICHT in den Chat, nicht in eine E-Mail, nicht in ein
   Ticket und auf keinen Screenshot. Claude liest die Datei selbst.
-  Zugriff auf gpt-image-1 setzt eine verifizierte Organisation voraus.
+  Zugriff auf die Bildmodelle setzt eine verifizierte Organisation voraus.
 '''
 
 def pruefen():
     k = schluessel(arg('--env'))
     r = subprocess.run(['curl', '-sS', '-o', '/dev/null', '-w', '%{http_code}',
-                        'https://api.openai.com/v1/models/gpt-image-1',
+                        'https://api.openai.com/v1/models/gpt-image-2',
                         '-H', f'Authorization: Bearer {k}', '--max-time', '30'],
                        capture_output=True, text=True, timeout=60)
     code = r.stdout.strip()
     print()
     if code == '200':
-        print(f'  ok  Schlüssel gültig, gpt-image-1 freigeschaltet.  ({k[:7]}…{k[-4:]})')
+        print(f'  ok  Schlüssel gültig, gpt-image-2 freigeschaltet.  ({k[:7]}…{k[-4:]})')
         print('      Es wurde nichts abgerechnet.\n'); return
     if code == '401':
         fehler('Schlüssel wird abgelehnt (401). Neu erzeugen und ablegen:\n' + ANLEITUNG)
     if code in ('403', '404'):
-        fehler('Schlüssel gültig, aber gpt-image-1 ist nicht freigeschaltet '
+        fehler('Schlüssel gültig, aber gpt-image-2 ist nicht freigeschaltet '
                f'({code}).\n          Im OpenAI-Dashboard unter Settings → '
                'Organization die Verifizierung abschließen.')
     fehler(f'Unerwartete Antwort: HTTP {code}')
@@ -91,13 +99,16 @@ def main():
     if fmt not in FORMATE: fehler(f'--format erwartet {" · ".join(FORMATE)}')
     if qual not in QUALITAET: fehler(f'--qualitaet erwartet {" · ".join(QUALITAET)}')
 
-    koerper = {'model': 'gpt-image-1', 'prompt': prompt, 'n': 1,
-               'size': FORMATE[fmt], 'quality': QUALITAET[qual],
-               'output_format': 'png'}
+    modell = arg('--modell', False, MODELL_STANDARD)
+    groesse = arg('--groesse', False, FORMATE[fmt])
+    koerper = {'model': modell, 'prompt': prompt, 'n': 1,
+               'size': groesse, 'quality': QUALITAET[qual]}
+    if not modell.startswith(('gpt-image-2', 'chatgpt-image')):
+        koerper['output_format'] = 'png'
     if '--transparent' in sys.argv:
         koerper['background'] = 'transparent'
 
-    print(f'\n  Erzeuge "{name}" — {FORMATE[fmt]}, Qualität {qual}'
+    print(f'\n  Erzeuge "{name}" — {modell}, {groesse}, Qualität {qual}'
           + (', transparenter Grund' if '--transparent' in sys.argv else ''))
     print(f'  Prompt: {prompt[:110]}{"…" if len(prompt) > 110 else ""}')
 

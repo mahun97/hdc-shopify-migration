@@ -1,0 +1,178 @@
+<!-- ============ 6 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 6 · Stufe 3</span>
+    <h2>Aufbau im Theme</h2>
+    <p class="lead"><code>shopify-design</code> — acht Phasen. Beginnt bewusst mit der
+    Copy als eigenem, freigebbarem Zwischenasset, bevor irgendetwas ins Theme geht.</p></div>
+
+  <div class="kasten"><strong>Warum die Texte zuerst kommen</strong>
+    <p>Wer direkt im Theme anfängt, diskutiert Formulierungen anhand von Screenshots und
+    baut jede Korrektur einzeln nach. Die Copy als HTML-Dokument lässt sich in einem Zug
+    lesen, kommentieren und freigeben — danach ist der Theme-Aufbau reine Ausführung.</p></div>
+
+  <div class="phase"><div class="sechseck">1</div><div class="txt">
+    <strong>Unterlagen sichten</strong>
+    <p>Scope-Dokument und Konzeptpräsentation. Fehlt eines von beidem, wird das gesagt
+    statt geraten.</p></div></div>
+
+  <div class="phase"><div class="sechseck">2</div><div class="txt">
+    <strong>Konzept auswerten</strong>
+    <p>Liest Struktur, Sections und Farbwerte aus dem Konzept aus — inklusive der
+    Füllfarben von Vektorflächen in der Präsentation.</p>
+    <span class="skript">1_konzept_lesen.py → konzept.json</span></div></div>
+
+  <div class="phase"><div class="sechseck">3</div><div class="txt">
+    <strong>Shop-Copy schreiben</strong>
+    <p>Als Senior Copywriter, nicht als Platzhalterfüller: Zielgruppe aus dem Konzept
+    ableiten, konversionsstark und zielgruppengerecht schreiben, das Dokument vollständig
+    füllen. Offene Stellen werden als <code>[RÜCKFRAGE …]</code> markiert, nicht
+    plausibel erfunden.</p>
+    <span class="skript">2_copy_geruest.py · 3_copy_ansicht.py → Shop-Copy.html</span></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 1 — Shop-Copy vom Kunden abgenommen. Erst danach geht es ins Theme.</strong></div></div>
+
+  <div class="phase"><div class="sechseck">4</div><div class="txt">
+    <strong>Theme inventarisieren</strong>
+    <p>Liest aus, welche Sections und Blöcke <em>dieses</em> Theme wirklich hat. Themes
+    unterscheiden sich stark; ein Feldname aus einem anderen Projekt wird stillschweigend
+    ignoriert.</p>
+    <span class="skript">4_theme_inventar.py</span></div></div>
+
+  <div class="phase"><div class="sechseck">5</div><div class="txt">
+    <strong>Aufbau</strong>
+    <p>Reihenfolge: erst Schriften und Farbpalette, dann die Bildmotive, dann die Sections,
+    dann Header, Footer und die Templates — Startseite, Kategorie, Produkt, Unterseiten.
+    Gearbeitet wird immer auf einem Theme-<strong>Duplikat</strong>; die Skripte
+    verweigern das aktive Theme.</p>
+    <span class="skript">7_gestaltung.py · 8_bilder.py · 5_aufbau.py</span></div></div>
+
+  <div class="phase"><div class="sechseck">6</div><div class="txt">
+    <strong>Theme-Einstellungen</strong>
+    <p>Schritt 2 der HDC-Checkliste: Logo, Favicon, Quick-View aus, zweites Bild bei
+    Mouseover, Warenkorb als Einschub, Bestellhinweis an, Express-Checkout aus,
+    Breadcrumbs, „Powered by Shopify" raus.</p>
+    <p>Das Skript liest erst das <code>settings_schema</code> des Themes und arbeitet nur
+    mit Schaltern, die es dort wirklich gibt. Jeder Punkt kennt mehrere mögliche Namen —
+    findet es keinen, meldet es den Punkt als offen.</p>
+    <span class="skript">9_checkliste.py --logo logo.png --favicon favicon.png --setzen</span></div></div>
+
+  <div class="phase"><div class="sechseck">7</div><div class="txt">
+    <strong>Kategorie-, Produkt- und Serviceseiten</strong>
+    <p>Schritt 6 bis 8 der Checkliste, drei Skripte. Was ergänzt wird und eine Zusage an
+    Käufer enthielte — Lieferzeit, Versandkosten, Rückgabe — kommt als
+    <code>[RÜCKFRAGE …]</code> hinein. Serviceseiten werden
+    <strong>unveröffentlicht</strong> angelegt und bleiben es, bis die Rückfragen
+    beantwortet sind.</p>
+    <span class="skript">10_kategorieseite.py · 11_produktseite.py · 12_serviceseiten.py</span></div></div>
+
+  <div class="phase"><div class="sechseck">8</div><div class="txt">
+    <strong>Prüfen</strong>
+    <p>Findet, was aus den Dateien ablesbar ist: offene Rückfrage-Marker, Platzhaltertexte,
+    Sections ohne Kollektion, nicht gesetzte Bilder, unangepasste Standardlinks, zu lange
+    Überschriften. Danach der Browserdurchgang.</p>
+    <span class="skript">6_pruefung.py</span></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 2 — Aufbau abgenommen</strong></div></div>
+
+  <h3>Bilder — drei Sorten, zwei davon machbar</h3>
+  <table>
+    <tr><th style="width:36%">Sorte</th><th style="width:30%">Woher</th><th>Machbar</th></tr>
+    <tr><td><strong>Fläche und Form</strong><br>Verläufe, Bühnen, geometrische Motive</td>
+        <td>HTML-Vorlage, hier gerendert</td><td>ja</td></tr>
+    <tr><td><strong>Komposition</strong><br>freigestelltes Produktfoto auf so einer Fläche</td>
+        <td>Kundenfoto + Vorlage</td><td>ja</td></tr>
+    <tr><td><strong>Foto</strong><br>Person bei der Anwendung, Situation</td>
+        <td>Shooting, Bildagentur, Kunde</td><td>nein</td></tr>
+  </table>
+  <p>Ein Banner nur aus Farbflächen sieht aus wie eine Präsentationsfolie. Fast immer ist
+  die mittlere Zeile die Antwort. Freigestellt wird über die macOS-Vision-Bibliothek,
+  Vorlagen mit Produktplatz sind <code>motiv-buehne</code> und <code>motiv-produkt</code>.</p>
+
+  <div class="kasten warn"><strong>Kein Text im Bild</strong>
+    <p>Steht die Überschrift im Bild <em>und</em> in der Section, liest man sie doppelt.
+    Text im Bild ist außerdem nicht responsiv, nicht übersetzbar, nicht durchsuchbar und
+    nicht vorlesbar. Bilder liefern Fläche, Farbe und Form — die Worte kommen aus der
+    Section.</p></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 7 · Stufe 4</span>
+    <h2>Abnahme</h2>
+    <p class="lead"><code>shopify-abnahme</code> führt drei Fachprüfungen nacheinander
+    aus, setzt um was maschinell geht und schreibt die Übergabe. Alle Befunde laufen in
+    denselben Dateien zusammen.</p></div>
+
+  <div class="phase"><div class="sechseck">1</div><div class="txt">
+    <strong>Alle drei Prüfungen</strong>
+    <p>Startet die Skripte aus <code>shopify-ux</code>, <code>shopify-cro</code> und
+    <code>shopify-recht</code> und schreibt <code>befunde/ux.json</code>,
+    <code>befunde/cro.json</code>, <code>befunde/recht.json</code>. Am Ende steht der
+    Stand: wie viele Blocker, wie viele ungeprüft.</p>
+    <span class="skript">abnahme.py --theme &lt;duplikat-id&gt;</span></div></div>
+
+  <div class="phase"><div class="sechseck">2</div><div class="txt">
+    <strong>Der Durchgang</strong>
+    <p>Die Skripte finden die <em>messbare</em> Hälfte. Die andere Hälfte findet nur, wer
+    den Shop benutzt. Drei Fachbrillen nacheinander, Beobachtungen kommen in
+    <code>befunde/durchgang.json</code> — gleiche Form, gleiches Gewicht.</p></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 1 — Befund vollständig, bevor irgendetwas geändert wird</strong></div></div>
+
+  <div class="phase"><div class="sechseck">3</div><div class="txt">
+    <strong>Umsetzen</strong>
+    <p>Setzt um, wofür es einen hinterlegten Handgriff gibt. Alles andere bleibt liegen —
+    auch wenn ein Befund sich selbst als automatisch umsetzbar markiert; das meldet das
+    Skript ausdrücklich. Lieber ein offener Punkt zu viel als ein falsch abgehakter.</p>
+    <span class="skript">umsetzen.py --setzen</span></div></div>
+
+  <div class="phase"><div class="sechseck">4</div><div class="txt">
+    <strong>Übergabe</strong>
+    <p>Schreibt <code>Uebergabe.md</code>, sortiert nach Zuständigkeit. Wird als Artifact
+    veröffentlicht und dem Kunden gegeben.</p>
+    <span class="skript">uebergabe.py</span></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 2 — Übergabe abgenommen</strong></div></div>
+
+  <h3>Die drei Fachbrillen</h3>
+  <div class="karten">
+    <div class="karte"><h4>shopify-ux · Benutzerführung</h4>
+      <p class="stark">Drei Kaufwege, immer dieselben.</p>
+      <p>„Ich weiß was ich will" · „Ich weiß es noch nicht" · „Ich habe eine Frage".
+      Klicks zählen, notieren wo man stockt. Genau da liegt der Befund.</p>
+      <p><strong>Gemessen:</strong> WCAG-Kontraste, Startseitenlänge, Navigationsbreite,
+      tote Menüpunkte, Alt-Texte, dünne Beschreibungen.</p></div>
+    <div class="karte"><h4>shopify-cro · Verkaufspsychologie</h4>
+      <p class="stark">Fünf Einwände in fester Reihenfolge.</p>
+      <p>Bin ich hier richtig → Ist das das Richtige → Kann ich denen glauben → Was kostet
+      es wirklich → Was, wenn es nicht passt. Eine Frage, die erst im Checkout beantwortet
+      wird, ist zu spät beantwortet.</p>
+      <p><strong>Gezählt:</strong> Bilder je Produkt, leere Kategorien, Bewertungen,
+      Empfehlungen, Zahlungsicons, Newsletter, Warenkorb-Typ.</p></div>
+  </div>
+  <div class="karten">
+    <div class="karte"><h4>shopify-recht · Pflichtangaben</h4>
+      <p class="stark">Stellt fest, <em>ob</em> etwas da ist — nicht, ob der Text trägt.</p>
+      <p>Richtlinien, MwSt- und Versandkostenhinweis, Grundpreis nach PAngV,
+      GPSR-Metafelder, Cookie-Einwilligung, Versandtarife, Rechtstexte in allen
+      veröffentlichten Sprachen.</p>
+      <p>Schreibt keine Rechtstexte und gibt keine Rechtsauskunft.</p></div>
+    <div class="karte"><h4>Das Befund-Format</h4>
+      <p class="stark">Ein Format für Skript und Mensch.</p>
+      <p>Jeder Punkt trägt Schwere (<code>blocker</code>, <code>wichtig</code>,
+      <code>kosmetik</code>), Ort, Befund, Empfehlung und wer es umsetzen kann. Claude
+      trägt dort auch ein, was es im Durchgang selbst gefunden hat — dieselbe Datei,
+      dasselbe Gewicht.</p></div>
+  </div>
+
+  <div class="kasten warn"><strong>Mobil wird nur behauptet, wenn es geprüft wurde</strong>
+    <p>Das Browserfenster zu verkleinern reicht nicht — der Rendering-Viewport bleibt
+    breit, und man prüft gegen die Desktop-Ansicht, ohne es zu merken. Ohne echte
+    Geräteemulation wird das offen gesagt und die Prüfung an einen Menschen mit Handy
+    abgegeben. Eine behauptete Mobilprüfung ist schlimmer als keine — sie schließt den
+    Punkt, ohne ihn zu prüfen.</p></div>
+</section>

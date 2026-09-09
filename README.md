@@ -274,6 +274,22 @@ Diese Grenzen sind in den Skills festgeschrieben, nicht Auslegungssache:
 
 ---
 
+## Prozessdokumentation
+
+`dokumentation/HDC-Shopify-Prozess.pdf` — der gesamte Ablauf auf 20 Seiten: Prinzip,
+Kette, Vorbereitung, alle vier Stufen mit ihren Phasen und Freigaben, die Übergabe, und
+im Anhang die Zuordnung der alten HDC-Checkliste zu den neuen Skills.
+
+Neu bauen nach Änderungen am Prozess:
+
+```bash
+bash dokumentation/bauen.sh
+```
+
+Braucht Google Chrome, `reportlab` und `pypdf`. Chrome rendert das Layout, reportlab
+stempelt Fußzeile und Seitenzahlen darüber — die CSS-Randboxen für Seitenzahlen kennt
+Chrome nicht.
+
 ## Updates
 
 Kommen automatisch. Manuell erzwingen:

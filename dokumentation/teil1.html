@@ -1,0 +1,158 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8">
+<title>HDC Shopify-Kit — Prozessdokumentation</title>
+<link rel="stylesheet" href="stil.css"></head><body>
+
+<section class="titel">
+  <div class="marke">HDC DIGITAL</div>
+  <svg class="hexband" viewBox="0 0 200 440"><g fill="none" stroke="#010B80" stroke-width="2">
+    <polygon points="100,20 170,60 170,140 100,180 30,140 30,60"/>
+    <polygon points="100,140 170,180 170,260 100,300 30,260 30,180"/>
+    <polygon points="100,260 170,300 170,380 100,420 30,380 30,300"/></g></svg>
+  <div class="mitte">
+    <h1>Shopify-Shop<br>erstellen</h1>
+    <div class="unter">Der vollständige Prozess von der Grundeinrichtung bis zur
+      Übergabe an den Kunden — sieben Skills, dreißig Phasen, elf Freigabepunkte.</div>
+    <div class="kette">
+      <span>1 · Grundeinrichtung</span><span>2 · Produkte</span>
+      <span>3 · Aufbau</span><span>4 · Abnahme &amp; Übergabe</span>
+    </div>
+  </div>
+  <div class="fuss">
+    Interne Prozessdokumentation · HDC Digital GmbH, Oldenburg · Stand 9. September 2026<br>
+    Grundlage: <code>github.com/mahun97/hdc-shopify-migration</code>
+  </div>
+</section>
+
+<section class="inhalt">
+  <div class="kopf" style="border-bottom:2.5px solid #010B80;padding-bottom:3.5mm">
+    <h2 style="font-size:19pt">Inhalt</h2></div>
+  <ol>
+    <li>Das Prinzip <em>Warum der Ablauf fest ist</em></li>
+    <li>Die Kette im Überblick <em>Vier Stufen, sieben Skills</em></li>
+    <li>Vorbereitung <em>Installation, Custom App, Token</em></li>
+    <li>Grundeinrichtung <em>shopify-settings · 7 Phasen</em></li>
+    <li>Produktmigration <em>shopify-migration · 7 Phasen</em></li>
+    <li>Aufbau im Theme <em>shopify-design · 8 Phasen</em></li>
+    <li>Abnahme <em>shopify-abnahme · UX, CRO, Recht</em></li>
+    <li>Die Übergabe <em>Uebergabe.md und der Livegang</em></li>
+    <li>Anhang <em>Alte Checkliste, Fallen, Befund-Format</em></li>
+  </ol>
+</section>
+
+<!-- ============ 1 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 1</span>
+    <h2>Das Prinzip</h2>
+    <p class="lead">Der Ablauf ist streng vorgegeben und immer gleich. Den größten Teil
+    macht die KI, ein Mensch kontrolliert an festen Punkten und gibt frei.</p></div>
+
+  <h3>Drei Eigenschaften, die den Prozess tragen</h3>
+  <div class="karten">
+    <div class="karte"><h4>Fester Ablauf</h4>
+      <p class="stark">Jeder Skill hat nummerierte Phasen in fester Reihenfolge.</p>
+      <p>Zwei Mitarbeiter, die denselben Shop bauen, kommen an denselben Punkten vorbei.
+      Was in Phase 3 gehört, passiert nicht in Phase 6 — sonst muss man es später bei
+      hunderten Produkten nachziehen.</p></div>
+    <div class="karte"><h4>Freigabe vor jedem Eingriff</h4>
+      <p class="stark">Elf Freigabepunkte über den ganzen Prozess.</p>
+      <p>Jeder schreibende Schritt verlangt ein getipptes <code>JA</code>. Lesende
+      Prüfungen laufen jederzeit. So kann niemand versehentlich hundert Produkte
+      überschreiben.</p></div>
+    <div class="karte"><h4>Nichts erfinden</h4>
+      <p class="stark">Was niemand wissen kann, wird zur Rückfrage.</p>
+      <p>Lieferzeiten, Preise, Maße, Herstelleradressen, Rechtstexte. Die Skripte setzen
+      <code>[RÜCKFRAGE …]</code> ein, spätere Phasen finden sie wieder und blockieren die
+      Veröffentlichung.</p></div>
+    <div class="karte"><h4>Ungeprüft ist nicht in Ordnung</h4>
+      <p class="stark">Fehlende Berechtigung heißt unbekannt, nicht erledigt.</p>
+      <p>Konnte ein Punkt nicht geprüft werden, steht er als eigener Abschnitt in der
+      Übergabe. Ein stillschweigend abgehakter Punkt ist die gefährlichste Zeile im
+      ganzen Dokument.</p></div>
+  </div>
+
+  <h3>Was Claude in diesem Prozess nicht tut</h3>
+  <p>Diese Grenzen sind in den Skills festgeschrieben und keine Auslegungssache.</p>
+  <table>
+    <tr><th style="width:38%">Grenze</th><th>Warum</th></tr>
+    <tr><td><strong>Keine Rechtstexte</strong></td>
+        <td>AGB, Widerruf, Datenschutz, Impressum kommen vom Kunden, seinem Anwalt oder
+        einem Dienst wie der IT-Recht Kanzlei. Auch kein Entwurf — ein Platzhaltertext,
+        der live geht, ist genau der Fall, den die Abmahnung trifft.</td></tr>
+    <tr><td><strong>Keine erfundenen Fakten</strong></td>
+        <td>Maße, Gewichte, Preise, Lieferzeiten, Herstelleranschriften,
+        Zielgruppenzuordnungen. Recherchiertes wird mit Quelle vorgelegt und bestätigt.</td></tr>
+    <tr><td><strong>Keine Zahlungsanbieter</strong></td>
+        <td>Dort werden Bankdaten und Ausweisdokumente verlangt. Ebenso keine
+        Domainkäufe und keine Tarifwahl.</td></tr>
+    <tr><td><strong>Kein Token im Chat</strong></td>
+        <td>Zugangsdaten gehören nicht in den Chat, in E-Mails, in Tickets oder auf
+        Screenshots. Claude liest die Datei selbst.</td></tr>
+    <tr><td><strong>Die App erstellt der Mensch</strong></td>
+        <td>Claude erzeugt keine Zugangsdaten. Der Weg dorthin steht in der Anleitung,
+        gegangen wird er im Shop-Admin.</td></tr>
+    <tr><td><strong>Nie auf dem aktiven Theme</strong></td>
+        <td>Alle Theme-Skripte verweigern das MAIN-Theme und verlangen ein Duplikat.</td></tr>
+  </table>
+
+  <div class="kasten warn"><strong>Der häufigste Fehler beim Einstieg</strong>
+    <p>Die Reihenfolge überspringen. Wer die Produkte vor der Grundeinrichtung importiert,
+    hat keine Metafeld-Definitionen — und muss Herstellerangaben, Datenblätter und
+    Pflichtfelder anschließend bei jedem einzelnen Produkt nachtragen. Wer die Abnahme an
+    einem halbfertigen Shop laufen lässt, erzeugt Befunde, die sich beim Weiterbauen von
+    selbst erledigen.</p></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 2</span>
+    <h2>Die Kette im Überblick</h2>
+    <p class="lead">Vier Stufen. Jede setzt voraus, dass die vorige abgenommen ist.</p></div>
+
+  <div class="kette-gross">
+    <div class="glied"><div class="n">STUFE 1</div><div class="t">shopify-settings</div>
+      <div class="b">Rahmen: Stammdaten, Richtlinien, Versand, Steuern, Sprachen,
+      Metafeld-Definitionen</div></div>
+    <div class="glied"><div class="n">STUFE 2</div><div class="t">shopify-migration</div>
+      <div class="b">Produkte: Steckbrief, Importvorlage, Prüfung, Import, Abnahme</div></div>
+    <div class="glied"><div class="n">STUFE 3</div><div class="t">shopify-design</div>
+      <div class="b">Aufbau: Copy, Gestaltung, Sections, Theme-Einstellungen, Seiten</div></div>
+    <div class="glied"><div class="n">STUFE 4</div><div class="t">shopify-abnahme</div>
+      <div class="b">Prüfung: UX, CRO, Recht — dann die Übergabe-Checkliste</div></div>
+  </div>
+
+  <h3>Sieben Skills in vier Plugins</h3>
+  <table>
+    <tr><th style="width:24%">Skill</th><th style="width:11%">Phasen</th>
+        <th style="width:11%">Freigaben</th><th>Ergebnis</th></tr>
+    <tr><td><code>shopify-settings</code></td><td>7</td><td>2</td>
+        <td><code>Einrichtungsstand.md</code> — was steht, was fehlt, was unklar blieb</td></tr>
+    <tr><td><code>shopify-migration</code></td><td>7</td><td>5</td>
+        <td>Produkte im Shop, Soll-Ist-Vergleich nach dem Import</td></tr>
+    <tr><td><code>shopify-design</code></td><td>8</td><td>2</td>
+        <td>Freigegebene Shop-Copy, aufgebautes Theme-Duplikat</td></tr>
+    <tr><td><code>shopify-abnahme</code></td><td>4</td><td>2</td>
+        <td><code>Uebergabe.md</code> — die Livegang-Liste</td></tr>
+    <tr><td style="padding-left:8mm"><code>shopify-ux</code></td><td>4</td><td>1</td>
+        <td><code>befunde/ux.json</code></td></tr>
+    <tr><td style="padding-left:8mm"><code>shopify-cro</code></td><td>4</td><td>1</td>
+        <td><code>befunde/cro.json</code></td></tr>
+    <tr><td style="padding-left:8mm"><code>shopify-recht</code></td><td>4</td><td>1</td>
+        <td><code>befunde/recht.json</code></td></tr>
+  </table>
+
+  <div class="kasten"><strong>Einzeln oder gesamt</strong>
+    <p>Die drei Prüf-Skills laufen auch für sich, wenn nur ein Blickwinkel gefragt ist.
+    Sie schreiben in dieselben Befund-Dateien, sodass eine spätere Gesamt-Abnahme darauf
+    aufsetzt statt neu anzufangen.</p></div>
+
+  <h3>So wird ein Skill aufgerufen</h3>
+  <p>Terminal im Kundenordner öffnen, <code>claude</code> starten, in normaler Sprache
+  sagen, was ansteht. Claude wählt den passenden Skill selbst.</p>
+  <pre>&gt; Ich möchte einen Shopify-Shop einrichten.
+&gt; Ich möchte Produkte in einen Shopify-Shop migrieren.
+&gt; Setz mir das Konzept im Theme um.
+&gt; Mach eine Abnahme — kann der Shop live gehen?</pre>
+  <p>Es muss keine Datei geöffnet und kein Befehl getippt werden. Die Skript-Aufrufe in
+  dieser Dokumentation stehen zur Nachvollziehbarkeit hier — im Alltag ruft Claude sie
+  selbst auf und erklärt die Ergebnisse im Chat.</p>
+</section>

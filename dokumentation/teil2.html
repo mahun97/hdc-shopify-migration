@@ -1,0 +1,185 @@
+<!-- ============ 3 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 3</span>
+    <h2>Vorbereitung</h2>
+    <p class="lead">Einmal je Mitarbeiter: Plugins installieren. Einmal je Kunde:
+    Custom App anlegen und den Token ablegen.</p></div>
+
+  <h3>Plugins installieren — einmal je Mitarbeiter</h3>
+  <p>Im Terminal <code>claude</code> starten und nacheinander eingeben:</p>
+  <pre>/plugin marketplace add mahun97/hdc-shopify-migration
+
+/plugin install shopify-settings@hdc-digital
+/plugin install shopify-migration@hdc-digital
+/plugin install shopify-design@hdc-digital
+/plugin install shopify-abnahme@hdc-digital</pre>
+  <p>Danach Claude Code neu starten oder <code>/reload-plugins</code> ausführen. Die
+  Plugins stehen ab dann in <strong>jedem</strong> Projektordner zur Verfügung. Updates
+  kommen automatisch beim nächsten Marketplace-Abgleich.</p>
+  <p>Voraussetzung: Zugriff auf das GitHub-Repo, einmalig <code>gh auth login</code>.</p>
+
+  <h3>Custom App — einmal je Kunde</h3>
+  <p>Der Token wird <strong>nicht</strong> von Claude erzeugt. Das macht ein Mensch im
+  Shop-Admin. Es gibt zwei Wege, und die Verwechslung kostet regelmäßig eine halbe Stunde:</p>
+  <table>
+    <tr><th style="width:30%">Weg</th><th style="width:33%">Erkennungsmerkmal</th><th>Ergebnis</th></tr>
+    <tr><td><strong>Shop-Admin</strong><br>Einstellungen → Apps → Apps entwickeln</td>
+        <td>Kein Feld „Zulässige Weiterleitungs-URL(s)"</td>
+        <td>Der Token steht direkt da. <strong>Das ist der Normalfall.</strong></td></tr>
+    <tr><td><strong>Partner Dashboard</strong></td>
+        <td>Es gibt ein Feld „Zulässige Weiterleitungs-URL(s)"</td>
+        <td>Kein direkter Token — es braucht einen OAuth-Durchlauf. Nur nehmen, wenn der
+        erste Weg nicht möglich ist.</td></tr>
+  </table>
+  <p>Die vollständige Anleitung mit allen Klicks steht in
+  <code>shopify-migration/references/custom-app.md</code>, die Liste der nötigen
+  Berechtigungen in <code>shopify-settings/references/berechtigungen.md</code>. Sie deckt
+  alle Skills ab.</p>
+
+  <h3>Der Token gehört in eine Datei</h3>
+  <pre><span class="k">~/.config/shopify-&lt;kunde&gt;.env</span>
+
+SHOP=kunde-xxxx.myshopify.com
+TOKEN=shpat_...</pre>
+
+  <div class="kasten warn"><strong>Zugangsdaten nie in den Chat</strong>
+    <p>Token und Client Secret gehören nicht in den Chat, nicht in E-Mails, nicht in
+    Tickets und nicht auf Screenshots. Claude liest die Datei selbst. Ist ein Secret
+    trotzdem einmal sichtbar geworden, muss es im Dev Dashboard rotiert werden — und
+    anschließend der Token neu geholt werden, weil die Rotation ihn ungültig macht.</p></div>
+
+  <div class="kasten"><strong>Fehlende Berechtigungen sind kein Blocker</strong>
+    <p>Alle Prüfungen laufen auch mit unvollständigen Rechten. Sie melden dann konkret,
+    was fehlt, und der Punkt gilt als <em>ungeprüft</em>. Häufig fehlen
+    <code>read_legal_policies</code>, <code>read_shipping</code>,
+    <code>read_locations</code> und <code>read_apps</code>.</p></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 4 · Stufe 1</span>
+    <h2>Grundeinrichtung</h2>
+    <p class="lead"><code>shopify-settings</code> — richtet den Rahmen ein: Stammdaten,
+    Richtlinien, Versand, Sprachen, Märkte, Standorte, Steuern, Metafeld-Definitionen.
+    Noch keine Produkte.</p></div>
+
+  <div class="phase"><div class="sechseck">1</div><div class="txt">
+    <strong>Zugang</strong>
+    <p>Token einlesen, Berechtigungen prüfen. Fehlen welche, laufen die Prüfungen trotzdem
+    und melden, was nicht sichtbar ist.</p></div></div>
+
+  <div class="phase"><div class="sechseck">2</div><div class="txt">
+    <strong>Bestandsaufnahme</strong>
+    <p>Prüft Stammdaten, Sichtbarkeit, Richtlinien, Versand, Sprachen, Märkte, Standorte,
+    Steuern und Metafelder. Der Befund wird im Chat zusammengefasst und trennt dabei drei
+    Dinge: was blockiert, was geprüft gehört, und was mangels Berechtigung unklar blieb.</p>
+    <p>Erfahrungsgemäß lohnt der Blick auf: Zeitzone (Dev-Shops stehen oft auf US-Zeit),
+    Shop-Adresse (steht oft noch auf der Agentur), Versandtarife (ohne Tarif kann niemand
+    bestellen), fehlende Richtlinien.</p>
+    <span class="skript">1_bestandsaufnahme.py → Einrichtungsstand.md</span></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 1 — Befund besprochen, Reihenfolge festgelegt</strong></div></div>
+
+  <div class="phase"><div class="sechseck">3</div><div class="txt">
+    <strong>Rechtliches</strong>
+    <p>Fehlende Richtlinien werden <em>angefordert</em>, nicht geschrieben. Liegen Texte
+    vor, werden sie eingespielt und anschließend in der Storefront geprüft: erreichbar
+    und im Footer verlinkt?</p>
+    <span class="skript">2_richtlinien.py --datei agb.html --typ TERMS_OF_SERVICE</span></div></div>
+
+  <div class="phase"><div class="sechseck">4</div><div class="txt">
+    <strong>Versand</strong>
+    <p>Versandzonen und Tarife brauchen konkrete Werte vom Kunden: welche Länder, welcher
+    Preis, ab welchem Warenwert versandkostenfrei. Ohne diese Angaben wird nichts
+    angelegt — ein geschätzter Versandpreis ist eine Zusage an Käufer.</p></div></div>
+
+  <div class="phase"><div class="sechseck">5</div><div class="txt">
+    <strong>Sprachen, Märkte, Metafelder</strong>
+    <p>Metafeld-Definitionen entstehen <strong>vor</strong> der Produktmigration — sonst
+    fehlen sie später bei allen Produkten. Wichtig dabei:
+    <code>access.storefront = PUBLIC_READ</code>, sonst sind sie im Theme unsichtbar,
+    obwohl sie im Admin gefüllt aussehen.</p></div></div>
+
+  <div class="phase"><div class="sechseck">6</div><div class="txt">
+    <strong>Was nur von Hand geht</strong>
+    <p>Zahlungen, Domain, Checkout-Branding, Kundenkonten, E-Mail-Vorlagen, Plan. Claude
+    führt durch den Shop-Admin. Steht der Browser zur Verfügung, kann es Formulare selbst
+    ausfüllen — der Shopify-Admin steckt allerdings in Shadow DOM, Werte müssen getippt
+    und nicht zugewiesen werden.</p>
+    <p><strong>Zahlungsanbieter nie selbst einrichten.</strong> Dort werden Bankdaten und
+    Ausweise verlangt.</p></div></div>
+
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 2 — Checkliste abgearbeitet</strong></div></div>
+
+  <div class="phase"><div class="sechseck">7</div><div class="txt">
+    <strong>Abschluss</strong>
+    <p>Bestandsaufnahme erneut laufen lassen und mit dem ersten Lauf vergleichen. Was ist
+    erledigt, was bleibt offen, was liegt beim Kunden.</p></div></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="kapitel">
+  <div class="kopf"><span class="nr">Kapitel 5 · Stufe 2</span>
+    <h2>Produktmigration</h2>
+    <p class="lead"><code>shopify-migration</code> — sieben Phasen, fünf Freigaben. Die
+    dichteste Freigabe-Folge im ganzen Prozess, weil ein fehlerhafter Import hunderte
+    Datensätze betrifft.</p></div>
+
+  <div class="phase"><div class="sechseck">1</div><div class="txt">
+    <strong>Zugang</strong>
+    <p>Custom App und Token wie in Kapitel 3. Claude erzeugt sie nicht.</p></div></div>
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 1 — Zugang steht</strong></div></div>
+
+  <div class="phase"><div class="sechseck">2</div><div class="txt">
+    <strong>Browser (optional)</strong>
+    <p>Nur nötig, wenn Daten aus einem Altsystem oder einer Weboberfläche geholt werden
+    müssen, für die es keine Schnittstelle gibt.</p></div></div>
+
+  <div class="phase"><div class="sechseck">3</div><div class="txt">
+    <strong>Shop verstehen</strong>
+    <p>Der Steckbrief liest den Zielshop aus: welche Metafelder gibt es, welche
+    Produktoptionen, welche Tag-Struktur, welche Kollektionen und nach welchen Regeln
+    füllen sie sich. Ohne diesen Schritt landen Produkte in leeren Kategorien, weil ein
+    Tag <code>beutel und rollen</code> heißt und die Kollektion
+    <code>beutel &amp; rollen</code> erwartet.</p>
+    <span class="skript">1_steckbrief.py</span></div></div>
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 2 — Tag-Vokabular bestätigt</strong></div></div>
+
+  <div class="phase"><div class="sechseck">4</div><div class="txt">
+    <strong>Vorlage füllen</strong>
+    <p>Die Importvorlage wird passend zu <em>diesem</em> Shop erzeugt — mit genau den
+    Spalten, die er kennt. Beim Füllen gilt: Fehlende Maße, Gewichte, Preise und
+    Herstelleranschriften werden nicht ergänzt, sondern zur Rückfrage.</p>
+    <span class="skript">2_vorlage.py</span></div></div>
+
+  <div class="phase"><div class="sechseck">5</div><div class="txt">
+    <strong>Prüfen</strong>
+    <p>Vor dem Import: Pflichtfelder, doppelte SKUs, Handle-Kollisionen, Varianten, die
+    sich gegenseitig ausschließen, Bildzuordnungen. Der Lauf endet mit Fehlercode, solange
+    Blocker offen sind.</p>
+    <span class="skript">3_pruefen.py</span></div></div>
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 3 — Prüfung fehlerfrei</strong></div></div>
+
+  <div class="phase"><div class="sechseck">6</div><div class="txt">
+    <strong>Import</strong>
+    <p>Zuerst ein Probelauf mit wenigen Produkten, dann der Rest. Der Import ist nach
+    einem Abbruch wieder aufnehmbar — bereits angelegte Produkte werden übersprungen
+    statt doppelt erzeugt.</p>
+    <span class="skript">4_import.py</span></div></div>
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 4 — Probelauf in Ordnung</strong></div></div>
+
+  <div class="phase"><div class="sechseck">7</div><div class="txt">
+    <strong>Abnahme</strong>
+    <p>Soll-Ist-Vergleich: Anzahl Produkte, Varianten, Bilder, Kollektionszuordnung.
+    Smart Collections füllen sich bei Shopify verzögert — direkt nach dem Import wirken
+    sie leer, obwohl alles stimmt.</p>
+    <span class="skript">5_abnahme.py</span></div></div>
+  <div class="phase freigabe"><div class="sechseck">✓</div><div class="txt">
+    <strong>Freigabe 5 — Abnahme besprochen</strong></div></div>
+</section>

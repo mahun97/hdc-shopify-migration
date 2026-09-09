@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{
+  --blau:#010B80; --dunkel:#0E112D; --gold:#A79563; --text:#1D1D1F;
+  --grau:#5B6270; --linie:#DFE2EA; --hell:#F5F6FA; --warn:#B3261E; --gut:#1E7A4B;
+}
+*{box-sizing:border-box}
+@page{size:A4;margin:20mm 17mm 22mm 17mm}
+body{margin:0;font-family:Poppins,-apple-system,'Helvetica Neue',sans-serif;
+  font-size:9.6pt;line-height:1.55;color:var(--text);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2,h3,h4{font-weight:700;line-height:1.2;margin:0}
+p{margin:0 0 .55em}
+code,pre{font-family:'IBM Plex Mono',Menlo,monospace}
+a{color:var(--blau);text-decoration:none}
+
+/* ---------- Titelseite ---------- */
+.titel{height:249mm;display:flex;flex-direction:column;justify-content:space-between;
+  break-after:page;position:relative}
+.titel .marke{font-weight:800;font-size:13pt;letter-spacing:.14em;color:var(--blau)}
+.titel .mitte h1{font-size:34pt;font-weight:800;letter-spacing:-.02em;margin:0 0 4mm}
+.titel .mitte .unter{font-size:14pt;color:var(--grau);font-weight:500;max-width:130mm}
+.titel .kette{display:flex;gap:3mm;margin:14mm 0 0;flex-wrap:wrap}
+.titel .kette span{border:1.2px solid var(--blau);color:var(--blau);border-radius:99px;
+  padding:2mm 5mm;font-size:8.4pt;font-weight:600}
+.titel .fuss{font-size:8.4pt;color:var(--grau);border-top:1.5px solid var(--blau);padding-top:4mm}
+.hexband{position:absolute;right:0;top:44%;width:62mm;opacity:.10}
+
+/* ---------- Inhalt ---------- */
+.inhalt{break-after:page}
+.inhalt ol{list-style:none;padding:0;margin:6mm 0 0;counter-reset:k}
+.inhalt li{counter-increment:k;display:flex;align-items:baseline;gap:4mm;
+  padding:2.4mm 0;border-bottom:1px solid var(--linie);font-size:10.5pt}
+.inhalt li::before{content:counter(k);font-weight:800;color:var(--blau);
+  min-width:9mm;font-size:11pt}
+.inhalt li em{font-style:normal;color:var(--grau);font-size:8.6pt;margin-left:auto;text-align:right}
+
+/* ---------- Kapitel ---------- */
+.kapitel{break-before:page}
+.kapitel > .kopf{border-bottom:2.5px solid var(--blau);padding-bottom:3.5mm;margin-bottom:6mm}
+.kopf .nr{font-size:8pt;font-weight:700;letter-spacing:.18em;color:var(--gold);
+  text-transform:uppercase;display:block;margin-bottom:1.5mm}
+.kopf h2{font-size:19pt;letter-spacing:-.01em}
+.kopf .lead{color:var(--grau);font-size:10pt;margin-top:2mm;max-width:150mm}
+
+h3{font-size:12pt;margin:7mm 0 2.5mm;color:var(--dunkel);break-after:avoid;break-inside:avoid}
+h4{font-size:9.8pt;margin:5mm 0 1.5mm;break-after:avoid}
+.kapitel h3:first-of-type{margin-top:2mm}
+
+/* ---------- Phasen ---------- */
+.phase{display:flex;gap:5mm;padding:3.2mm 0;border-bottom:1px solid var(--linie);
+  break-inside:avoid}
+.phase:last-child{border-bottom:none}
+.phase .sechseck{flex:0 0 11mm;height:12.5mm;background:var(--blau);color:#fff;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11pt}
+.phase.freigabe .sechseck{background:var(--gold)}
+.phase .txt{flex:1}
+.phase .txt > strong:first-child{font-size:10.2pt;display:block;margin-bottom:.8mm}
+.phase .txt p strong{font-weight:600}
+.phase .txt p{margin:0 0 .4em;font-size:9.3pt}
+.phase .txt .skript{font-family:'IBM Plex Mono',monospace;font-size:8.2pt;color:var(--blau);
+  background:var(--hell);border-radius:3px;padding:.5mm 1.6mm;display:inline-block;margin-top:.8mm}
+
+/* ---------- Tabellen ---------- */
+table{width:100%;border-collapse:collapse;font-size:8.8pt;margin:2.5mm 0 4mm}
+tr{break-inside:avoid}
+th{break-after:avoid}
+th{text-align:left;font-weight:700;background:var(--dunkel);color:#fff;padding:2mm 2.5mm;font-size:8.2pt}
+td{padding:2mm 2.5mm;border-bottom:1px solid var(--linie);vertical-align:top}
+tr:nth-child(even) td{background:#FAFBFD}
+td code{font-size:8pt;color:var(--blau)}
+
+/* ---------- Kästen ---------- */
+.kasten{border-left:3px solid var(--blau);background:var(--hell);padding:3mm 4mm;
+  margin:3.5mm 0;font-size:9.2pt;break-inside:avoid}
+.kasten.warn{border-color:var(--warn);background:#FDF4F3}
+.kasten.gut{border-color:var(--gut);background:#F2F9F5}
+.kasten strong{display:block;margin-bottom:1mm}
+.kasten p:last-child{margin-bottom:0}
+
+pre{background:var(--dunkel);color:#E7EAF2;padding:3mm 4mm;border-radius:4px;
+  font-size:8.2pt;line-height:1.5;overflow:hidden;white-space:pre-wrap;margin:2.5mm 0 4mm;
+  break-inside:avoid}
+pre .k{color:var(--gold)}
+
+ul.strich{list-style:none;padding:0;margin:2mm 0 4mm}
+ul.strich li{position:relative;padding-left:5mm;margin-bottom:1.6mm;font-size:9.3pt;break-inside:avoid}
+ul.strich li::before{content:'';position:absolute;left:0;top:.62em;width:3mm;height:1.4px;
+  background:var(--blau)}
+
+.karten{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm;margin:3mm 0 4mm;break-inside:avoid}
+.karte{border:1px solid var(--linie);border-radius:5px;padding:3.5mm;break-inside:avoid}
+.karte h4{margin:0 0 1.5mm;color:var(--blau);font-size:9.8pt}
+.karte p{font-size:8.8pt;margin:0 0 .4em;color:var(--grau)}
+.karte p.stark{color:var(--text)}
+
+.kette-gross{display:flex;align-items:stretch;gap:0;margin:4mm 0 6mm}
+.kette-gross .glied{flex:1;border:1.5px solid var(--blau);border-right:none;padding:3mm;
+  position:relative}
+.kette-gross .glied:last-child{border-right:1.5px solid var(--blau)}
+.kette-gross .glied .n{font-size:7.6pt;font-weight:700;color:var(--gold);letter-spacing:.12em}
+.kette-gross .glied .t{font-family:'IBM Plex Mono',monospace;font-size:8.4pt;font-weight:500;
+  color:var(--blau);margin:1mm 0}
+.kette-gross .glied .b{font-size:8pt;color:var(--grau);line-height:1.4}
